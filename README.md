@@ -1,4 +1,4 @@
-# ta-gen
+# ta-gen v1.0
 A command line Texture Atlas generator for Starling
 
 ### Authors
