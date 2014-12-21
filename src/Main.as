@@ -50,7 +50,7 @@ package
 	import flash.utils.getTimer;
 
 	import com.adobe.images.PNGEncoder;
-	import org.villekoskela.utils.*;
+	import org.villekoskela.utils.RectanglePacker;
 
 	[SWF(width='512', height='512', backgroundColor='#ffffff', frameRate='30')]
 
@@ -489,21 +489,21 @@ adl <app-xml> -- arguments
 			stream.open(_outFile, FileMode.WRITE);
 			stream.writeBytes(ba);
 			stream.close();
-			
+
 			log("* file saved: " + _outFile.nativePath);
-			
+
 			// save XML
 			var pngFile:String = _outFile.nativePath;
 			pngFile = pngFile.substring(pngFile.lastIndexOf(File.separator) + 1, pngFile.length);
 			const xml:String = getXMLStarling(pngFile);
 			const xmlPath:String = _outFile.nativePath.split(PNG).join(".xml");
 			_outFile = _outFile.resolvePath(xmlPath);
-			
+
 			stream = new FileStream();
 			stream.open(_outFile, FileMode.WRITE);
 			stream.writeUTFBytes(xml);
 			stream.close();
-			
+
 			log("* file saved: " + _outFile.nativePath);
 			log("* done saving in " + (getTimer() - startTime) + " ms");
 
