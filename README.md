@@ -21,8 +21,7 @@ only and is quite portable.
 
 ### Building
 
-run build.sh (osx) or build.cmd (win32)
-resulted SWF will be written to ./bin.
+run build.sh (osx) or build.cmd (win32). resulted SWF will be written to ./bin.
 
 edit ta-gen.xml if needed
 
@@ -60,7 +59,7 @@ list of arguments (could be out of date):
 -help: this screen
 ```
 
-if you don't specify -path or -out the app becomes semi-GUI and it will ask you
+if you don't specify -in or -out the app becomes semi-GUI and it will ask you
 where to find the sources files and where to write the output PNG / XML pair.
 
-for a usage example see ./test/
+for a usage example see ./test
