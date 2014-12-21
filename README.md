@@ -1,32 +1,32 @@
 # ta-gen
 A command line Texture Atlas generator for Starling
 
-### AUTHORS
+### Authors
 
 - interface by Lubomir I. Ivanov
 - RectanglePacker by Ville Koskela
 - PNGEncoder and Flash/AIR by Adobe
 
-### DESCRIPTION
+### Description
 
 ta-gen is a command line Texture Atlas generator for the Starling format.
 It allows you to process a folder of images and output a sprite sheet and a XML
 descriptor. The application is written in AS3.0 and it uses the AIR runtime
 only and is quite portable.
 
-### REQUIREMENTS
+### Requirements
 
 - recent AIR SDK
 - mxmlc and adl in PATH
 
-### BUILDING
+### Building
 
 run build.sh (osx) or build.cmd (win32)
 resulted SWF will be written to ./bin.
 
 edit ta-gen.xml if needed
 
-### INSTALLATION
+### Installation
 
 copy these files to a folder in PATH:
 ```
@@ -37,7 +37,7 @@ copy these files to a folder in PATH:
 
 edit ta-gen.xml if needed
 
-### USAGE:
+### Usage
 
 this will get your started:
 ```
