@@ -60,6 +60,6 @@ list of arguments (could be out of date):
 ```
 
 if you don't specify -in or -out the app becomes semi-GUI and it will ask you
-where to find the sources files and where to write the output PNG / XML pair.
+where to find the source files and where to write the output PNG / XML pair.
 
 for a usage example see ./test
