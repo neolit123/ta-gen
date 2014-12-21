@@ -184,7 +184,7 @@ adl <app-xml> -- arguments
 				if (args[0] == "-help") {
 					verbose = true;
 					log(HELP_TEXT);
-					NativeApplication.nativeApplication.exit();
+					exit();
 					return;
 				}
 				const len:int = args.length;
@@ -202,8 +202,7 @@ adl <app-xml> -- arguments
 						folder = currentDir.resolvePath(narg);
 						log("* argument -in: " + folder.nativePath);
 						if (!folder.exists || !folder.isDirectory) {
-							log("* ERROR: input path not a directory or does not exist");
-							NativeApplication.nativeApplication.exit();
+							error("input path not a directory or does not exist");
 							return;
 						}
 						folders.push(folder);
@@ -236,25 +235,23 @@ adl <app-xml> -- arguments
 				}
 
 				if (!minDim || !maxDim) {
-					log("* ERROR: mindim or maxdim cannot be zero");
-					NativeApplication.nativeApplication.exit();
+					error("mindim or maxdim cannot be zero");
 					return;
 				}
 
 				if (minDim > maxDim) {
-					log("* ERROR: mindim cannot be larger than maxdim");
-					NativeApplication.nativeApplication.exit();
+					error("mindim cannot be larger than maxdim");
 					return;
 				}
 
 				if (usePowerOfTwo) {
 					if (!isPowerOfTwo(minDim)) {
 						minDim = toPowerOfTwo(minDim);
-						log("* WARNING: adjusting mindim to the nearest power of two: " + minDim);
+						warning("adjusting mindim to the nearest power of two: " + minDim);
 					}
 					if (!isPowerOfTwo(maxDim)) {
 						maxDim = toPowerOfTwo(maxDim);
-						log("* WARNING: adjusting maxdim to the nearest power of two: " + maxDim);
+						warning("adjusting maxdim to the nearest power of two: " + maxDim);
 					}
 				}
 
@@ -283,12 +280,35 @@ adl <app-xml> -- arguments
 			return  Math.pow(2, Math.round(Math.log(_x) / Math.LN2));
 		}
 
-		private function log(...arg):void
+		private function log(_text:String):void
 		{
 			if (verbose)
-				trace.apply(null, arg);
-			textLog.appendText(arg.toString() + "\n");
+				trace(_text);
+			textLog.appendText(_text + "\n");
 			textLog.scrollV = textLog.maxScrollV;
+		}
+
+		private function warning(_text:String):void
+		{
+			const oldVerbose:Boolean = verbose;
+			verbose = true;
+			log("* WARNING: " + _text);
+			verbose = oldVerbose;
+		}
+
+		private function error(_text:String, _exit:Boolean = true):void
+		{
+			const oldVerbose:Boolean = verbose;
+			verbose = true;
+			log("* ERROR: " + _text);
+			verbose = oldVerbose;
+			if (_exit)
+				exit();
+		}
+
+		private function exit():void
+		{
+			NativeApplication.nativeApplication.exit();
 		}
 
 		private function browseSelectHandler(_e:Event):void
@@ -384,9 +404,9 @@ adl <app-xml> -- arguments
 				// error checking for dimensions
 				if (dimW > maxDim || dimH > maxDim) {
 					dimError = true;
-					log("* ERROR: dimensions exceed the maximum of " + maxDim + " pixels");
+					error("dimensions exceed the maximum of " + maxDim + " pixels", false);
 					if (outFile) {
-						NativeApplication.nativeApplication.exit();
+						exit();
 						return;
 					}
 				}
@@ -512,7 +532,7 @@ adl <app-xml> -- arguments
 
 			if (outFile) {
 				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
-				NativeApplication.nativeApplication.exit();
+				exit();
 			}
 		}
 
