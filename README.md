@@ -33,7 +33,7 @@ copy these files to a folder in PATH:
 ./bin/ta-gen.swf
 ./bin/ta-gen.xml
 ./bin/ta-gen (osx) or ./bin/ta-gen.cmd (win32)
-``` 
+```
 
 edit ta-gen.xml if needed
 
@@ -46,13 +46,13 @@ ta-gen -help
 
 list of arguments (could be out of date):
 ```
--in <path-to-load>
+-in <path-to-load> -in <...>
 -out <output-png>
+-ignore <some-path-or-file> -ignore <...> (no wildcards)
 -pngprefix <png-name-prefix>
 -subprefix <texture-name-prefix>
 -mindim <minimum-pixels> (def: 32)
 -maxdim <maximum-pixels> (def: 2048)
--ignore <some-path-or-file> -ignore <...> ... (no wildcards)
 -background <0xAARRGGBB> (def. 0x0)
 -padding <padding-between-images> (def: 1)
 -poweroftwo: end dimensions will be a power of 2 square

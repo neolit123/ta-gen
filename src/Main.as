@@ -73,8 +73,9 @@ package
 		private var background:uint = 0x0;
 
 		// files and lists
-		private var folder:File = null;
 		private var outFile:File = null;
+		private var folder:File = null;
+		private var folders:Array = [];
 		private var ignore:Array = [];
 		private var files:Array = [];
 
@@ -111,13 +112,13 @@ Copyright 2008, Adobe Systems Incorporated. All rights reserved.
 
 usage:
 adl <app-xml> -- arguments
-	-in <path-to-load>
+	-in <path-to-load> -in <...>
 	-out <output-png>
+	-ignore <some-path-or-file> -ignore <...> (no wildcards)
 	-pngprefix <png-name-prefix>
 	-subprefix <texture-name-prefix>
 	-mindim <minimum-pixels> (def: 32)
 	-maxdim <maximum-pixels> (def: 2048)
-	-ignore <some-path-or-file> -ignore <...> ... (no wildcards)
 	-background <0xAARRGGBB> (def. 0x0)
 	-padding <padding-between-images> (def: 1)
 	-poweroftwo: end dimensions will be a power of 2 square
@@ -166,6 +167,7 @@ adl <app-xml> -- arguments
 		// called each time the app starts
 		public function invokeEventHandler(_e:InvokeEvent):void
 		{
+			var i:int;
 			args = _e.arguments;
 			currentDir = _e.currentDirectory;
 
@@ -186,7 +188,7 @@ adl <app-xml> -- arguments
 					return;
 				}
 				const len:int = args.length;
-				for (var i:int = 0; i < len; i++) {
+				for (i = 0; i < len; i++) {
 					const carg:String = args[i];
 					// one part arguments
 					if (carg == "-poweroftwo") {
@@ -200,10 +202,11 @@ adl <app-xml> -- arguments
 						folder = currentDir.resolvePath(narg);
 						log("* argument -in: " + folder.nativePath);
 						if (!folder.exists || !folder.isDirectory) {
-							log("* ERROR: input path does not exist");
+							log("* ERROR: input path not a directory or does not exist");
 							NativeApplication.nativeApplication.exit();
 							return;
 						}
+						folders.push(folder);
 					} else if (carg == "-out") {
 						outFile = currentDir.resolvePath(narg);
 						log("* argument -out: " + outFile.nativePath);
@@ -255,8 +258,10 @@ adl <app-xml> -- arguments
 					}
 				}
 
-				if (folder) {
-					processFolder(folder);
+				if (folders.length) {
+					for (i = 0; i < folders.length; i++)
+						traverse(folders[i]);
+					processFolders();
 					return;
 				}
 			}
@@ -288,14 +293,12 @@ adl <app-xml> -- arguments
 
 		private function browseSelectHandler(_e:Event):void
 		{
-			processFolder(folder);
+			processFolders();
 		}
 
 		// process folder
-		private function processFolder(_folder:File):void
+		private function processFolders():void
 		{
-			log("* target path is: " + _folder.nativePath);
-			traverse(_folder);
 			if (files.length) {
 				urlRequest.url = files[0];
 				startTime = getTimer();
@@ -335,7 +338,7 @@ adl <app-xml> -- arguments
 				if (path.toLowerCase().indexOf(".jpg") != -1 ||
 				    path.toLowerCase().indexOf(".png") != -1 ||
 				    path.toLowerCase().indexOf(".gif") != -1)
-				    files.push(path);
+					files.push(path);
 			}
 		}
 
