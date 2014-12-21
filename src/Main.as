@@ -333,9 +333,9 @@ adl <app-xml> -- arguments
 				const path:String = list[i].nativePath;
 				// LAZY;
 				if (path.toLowerCase().indexOf(".jpg") != -1 ||
-					path.toLowerCase().indexOf(".png") != -1 ||
-					path.toLowerCase().indexOf(".gif") != -1)
-					files.push(path);
+				    path.toLowerCase().indexOf(".png") != -1 ||
+				    path.toLowerCase().indexOf(".gif") != -1)
+				    files.push(path);
 			}
 		}
 
@@ -438,7 +438,6 @@ adl <app-xml> -- arguments
 
 			if (!dimError)
 				log("* click above to save the image");
-
 		}
 
 		// when clicked on the sprite sheet
@@ -486,32 +485,32 @@ adl <app-xml> -- arguments
 			if (pathLowerCase.indexOf(PNG) == -1)
 				_outFile = _outFile.resolvePath(_outFile.nativePath + PNG);
 
-       		stream = new FileStream();
-        	stream.open(_outFile, FileMode.WRITE);
-        	stream.writeBytes(ba);
-        	stream.close();
-
-        	log("* file saved: " + _outFile.nativePath);
-
-       		// save XML
-       		var pngFile:String = _outFile.nativePath;
+			stream = new FileStream();
+			stream.open(_outFile, FileMode.WRITE);
+			stream.writeBytes(ba);
+			stream.close();
+			
+			log("* file saved: " + _outFile.nativePath);
+			
+			// save XML
+			var pngFile:String = _outFile.nativePath;
 			pngFile = pngFile.substring(pngFile.lastIndexOf(File.separator) + 1, pngFile.length);
 			const xml:String = getXMLStarling(pngFile);
 			const xmlPath:String = _outFile.nativePath.split(PNG).join(".xml");
 			_outFile = _outFile.resolvePath(xmlPath);
-
-        	stream = new FileStream();
-        	stream.open(_outFile, FileMode.WRITE);
-        	stream.writeUTFBytes(xml);
-        	stream.close();
-
-        	log("* file saved: " + _outFile.nativePath);
-        	log("* done saving in " + (getTimer() - startTime) + " ms");
+			
+			stream = new FileStream();
+			stream.open(_outFile, FileMode.WRITE);
+			stream.writeUTFBytes(xml);
+			stream.close();
+			
+			log("* file saved: " + _outFile.nativePath);
+			log("* done saving in " + (getTimer() - startTime) + " ms");
 
 			if (outFile) {
 				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
-        		NativeApplication.nativeApplication.exit();
-        	}
+				NativeApplication.nativeApplication.exit();
+			}
 		}
 
 		// generate the XML string
