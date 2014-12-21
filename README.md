@@ -46,7 +46,7 @@ ta-gen -help
 
 list of arguments (could be out of date):
 ```
--path <path-to-load>
+-in <path-to-load>
 -out <output-png>
 -pngprefix <png-name-prefix>
 -subprefix <texture-name-prefix>

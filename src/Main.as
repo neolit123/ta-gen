@@ -111,7 +111,7 @@ Copyright 2008, Adobe Systems Incorporated. All rights reserved.
 
 usage:
 adl <app-xml> -- arguments
-	-path <path-to-load>
+	-in <path-to-load>
 	-out <output-png>
 	-pngprefix <png-name-prefix>
 	-subprefix <texture-name-prefix>
@@ -196,11 +196,11 @@ adl <app-xml> -- arguments
 					if (i == len - 1) // bellow are two-part arguments
 						break;
 					const narg:String = args[i + 1];
-					if (carg == "-path") {
+					if (carg == "-in") {
 						folder = currentDir.resolvePath(narg);
-						log("* argument -path: " + folder.nativePath);
+						log("* argument -in: " + folder.nativePath);
 						if (!folder.exists || !folder.isDirectory) {
-							log("* ERROR: path does not exist");
+							log("* ERROR: input path does not exist");
 							NativeApplication.nativeApplication.exit();
 							return;
 						}
