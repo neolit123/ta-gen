@@ -1,0 +1,5 @@
+#!/bin/sh
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd`
+popd > /dev/null
+adl $SCRIPTPATH/ta-gen.xml -- "$@"
