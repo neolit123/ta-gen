@@ -394,13 +394,6 @@ adl <app-xml> -- arguments
 			dimError = false;
 
 			while (true) {
-				// FIXME; reset() doesn't work well! possible bug in RectanglePacker
-				packer = new RectanglePacker(dimW, dimH, padding);
-
-				// insert rectangles
-				for (i = 0; i < total; i++)
-					packer.insertRectangle(bmp[i].width, bmp[i].height, i);
-
 				// error checking for dimensions
 				if (dimW > maxDim || dimH > maxDim) {
 					dimError = true;
@@ -409,7 +402,15 @@ adl <app-xml> -- arguments
 						exit();
 						return;
 					}
+					break;
 				}
+
+				// FIXME; reset() doesn't work well! possible bug in RectanglePacker
+				packer = new RectanglePacker(dimW, dimH, padding);
+
+				// insert rectangles
+				for (i = 0; i < total; i++)
+					packer.insertRectangle(bmp[i].width, bmp[i].height, i);
 
 				// pack
 				packer.packRectangles(true);
