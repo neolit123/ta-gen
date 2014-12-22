@@ -128,7 +128,7 @@ adl <app-xml> -- arguments
 
 		public function Main():void
 		{
-			initialTime = 0;
+			initialTime = getTimer();
 
 			// add the invoke handler
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invokeEventHandler);
