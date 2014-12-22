@@ -193,7 +193,7 @@ adl <app-xml> -- arguments
 					// one part arguments
 					if (carg == "-poweroftwo") {
 						usePowerOfTwo = true;
-						log("* argument -poweroftwo: " + usePowerOfTwo);
+						log("* argument -poweroftwo");
 					}
 					if (i == len - 1) // bellow are two-part arguments
 						break;
