@@ -313,6 +313,7 @@ adl <app-xml> -- arguments
 
 		private function browseSelectHandler(_e:Event):void
 		{
+			traverse(folder);
 			processFolders();
 		}
 
