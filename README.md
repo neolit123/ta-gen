@@ -56,7 +56,7 @@ list of arguments (could be out of date):
 -padding <padding-between-images> (def: 1)
 -poweroftwo: end dimensions will be a power of 2 square
 -colorbits <1-8> (def. 8): less than 8 means quantization
--dither: apply dithering colorbits less than 8
+-dither: apply dithering for colorbits less than 8
 -verbose: detailed output
 -help: this screen
 

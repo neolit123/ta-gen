@@ -127,7 +127,7 @@ adl <app-xml> -- arguments
 	-padding <padding-between-images> (def: 1)
 	-poweroftwo: end dimensions will be a power of 2 square
 	-colorbits <1-8> (def. 8): less than 8 means quantization
-	-dither: apply dithering; works only for colorbits less than 8
+	-dither: apply dithering for colorbits less than 8
 	-verbose: detailed output
 	-help: this screen
 ]]>;
