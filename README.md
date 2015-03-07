@@ -1,4 +1,4 @@
-# ta-gen v1.0
+# ta-gen v1.1
 A command line Texture Atlas generator for Starling
 
 ### Authors
@@ -55,8 +55,11 @@ list of arguments (could be out of date):
 -background <0xAARRGGBB> (def. 0x0)
 -padding <padding-between-images> (def: 1)
 -poweroftwo: end dimensions will be a power of 2 square
+-colorbits <1-8> (def. 8): less than 8 means quantization
+-dither: apply dithering colorbits less than 8
 -verbose: detailed output
 -help: this screen
+
 ```
 
 if you don't specify -in or -out the app becomes semi-GUI and it will ask you

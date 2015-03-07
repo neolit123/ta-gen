@@ -41,6 +41,7 @@ package
 	import flash.text.TextFormat;
 
 	import flash.geom.Rectangle;
+	import flash.geom.Point;
 
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -51,6 +52,7 @@ package
 
 	import com.adobe.images.PNGEncoder;
 	import org.villekoskela.utils.RectanglePacker;
+	import neolit123.utils.BitmapDataQuantize;
 
 	[SWF(width='512', height='512', backgroundColor='#ffffff', frameRate='30')]
 
@@ -67,6 +69,8 @@ package
 		private var pngPrefix:String = "";
 		private var subPrefix:String = "";
 		private var usePowerOfTwo:Boolean = false;
+		private var useDither:Boolean = false;
+		private var colorBits:uint = 8;
 		private var verbose:Boolean = false;
 		private var dimW:uint, dimH:uint;
 		private var dimError:Boolean = false;
@@ -99,7 +103,7 @@ package
 		private var packer:RectanglePacker;
 
 		// static consts
-		private static const VERSION:String = "1.0";
+		private static const VERSION:String = "1.1";
 		private static const TITLE:String = "ta-gen v" + VERSION;
 		private static const HELP_TEXT:String =
 <![CDATA[Copyright 2014 and later, Lubomir I. Ivanov. All rights reserved.
@@ -122,6 +126,8 @@ adl <app-xml> -- arguments
 	-background <0xAARRGGBB> (def. 0x0)
 	-padding <padding-between-images> (def: 1)
 	-poweroftwo: end dimensions will be a power of 2 square
+	-colorbits <1-8> (def. 8): less than 8 means quantization
+	-dither: apply dithering; works only for colorbits less than 8
 	-verbose: detailed output
 	-help: this screen
 ]]>;
@@ -194,6 +200,9 @@ adl <app-xml> -- arguments
 					if (carg == "-poweroftwo") {
 						usePowerOfTwo = true;
 						log("* argument -poweroftwo");
+					} else if (carg == "-dither") {
+						useDither = true;
+						log("* argument -dither");
 					}
 					if (i == len - 1) // bellow are two-part arguments
 						break;
@@ -231,6 +240,10 @@ adl <app-xml> -- arguments
 						const ignorePath:File = currentDir.resolvePath(narg);
 						log("* argument -ignore: " + ignorePath.nativePath);
 						ignore.push(ignorePath);
+					} else if (carg == "-colorbits") {
+						colorBits = uint(narg);
+						colorBits < 1 ? 1 : (colorBits > 8 ? 8 : colorBits);
+						log("* argument -colorbits: " + colorBits);
 					}
 				}
 
@@ -490,17 +503,45 @@ adl <app-xml> -- arguments
 		// save the PNG, XML pair
 		private function saveFiles(_outFile:File):void
 		{
-			// saving...
-			log("* saving...");
+			// rendering...
+			log("* rendering...");
 			startTime = getTimer();
 
 			// draw object to BitmapData
 			const scale:Number = cont.scaleY;
 			cont.scaleX = cont.scaleY = 1.0;
-			const bmd:BitmapData = new BitmapData(dimW, dimW, true, background);
-			bmd.draw(cont);
+			var bmd:BitmapData;
+
+			// quantize
+			if (colorBits < 8) {
+				bmd = new BitmapData(dimW, dimW, true, 0x0);
+				bmd.draw(cont);
+
+				const levels:uint = BitmapDataQuantize.bitsToLevels(colorBits);
+				if (useDither) {
+					log("* quantizing with floyd-steinberg...");
+					BitmapDataQuantize.quantizeFloydSteinberg(bmd, levels);
+				} else {
+					log("* quantizing...");
+					BitmapDataQuantize.quantize(bmd, levels);
+				}
+				const back:BitmapData = new BitmapData(dimW, dimW, true, background);
+				back.copyPixels(bmd, back.rect, new Point(0, 0), null, null, true);
+				bmd.dispose();
+				bmd = back;
+			} else {
+				bmd = new BitmapData(dimW, dimW, true, background);
+				bmd.draw(cont);
+			}
 			cont.scaleX = cont.scaleY = scale;
+
+			log("* done rendering in " + (getTimer() - startTime) + " ms");
+
+			// saving...
+			log("* saving...");
+			startTime = getTimer();
 			const ba:ByteArray = PNGEncoder.encode(bmd);
+			bmd.dispose();
 
 			var stream:FileStream;
 

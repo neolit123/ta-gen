@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<application xmlns="http://ns.adobe.com/air/application/15.0">
+<application xmlns="http://ns.adobe.com/air/application/16.0">
   <id>ta-gen</id>
-  <versionNumber>1.0</versionNumber>
+  <versionNumber>1.1</versionNumber>
   <filename>ta-gen</filename>
   <description/>
   <name>ta-gen</name>
