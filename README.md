@@ -6,6 +6,7 @@ A command line Texture Atlas generator for Starling
 - interface by Lubomir I. Ivanov
 - RectanglePacker by Ville Koskela
 - PNGEncoder and Flash/AIR by Adobe
+- dither based on code by Ralph Hauwert
 
 ### Description
 
