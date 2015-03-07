@@ -24,7 +24,8 @@ only and is quite portable.
 
 run build.sh (osx) or build.cmd (win32). resulted SWF will be written to ./bin.
 
-edit ta-gen.xml if needed
+edit ta-gen.xml if needed - you may have to adjust the <application xmlns=...>
+value to fit your adl version.
 
 ### Installation
 
