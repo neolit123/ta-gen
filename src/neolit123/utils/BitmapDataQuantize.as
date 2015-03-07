@@ -104,9 +104,9 @@ package neolit123.utils
 
 					// normalize and scale to the number of _levels.
 					// basically a cheap but suboptimal form of color quantization.
-					nr = Math.round((r / 255) * _levels) * norm;
-					ng = Math.round((g / 255) * _levels) * norm;
-					nb = Math.round((b / 255) * _levels) * norm;
+					nr = Math.round((r * INV_255) * _levels) * norm;
+					ng = Math.round((g * INV_255) * _levels) * norm;
+					nb = Math.round((b * INV_255) * _levels) * norm;
 
 					// set the current pixel.
 					nc = nr << 16 | ng << 8 | nb;
