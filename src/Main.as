@@ -606,10 +606,11 @@ adl <app-xml> -- arguments
 				var bName:String = files[i].split(folder.nativePath + File.separator).join("");
 				bName = bName.split(File.separator).join("/");
 				const b:Bitmap = bmp[i];
+				const ext2:uint = extrude * 2;
 				const bX:String = (b.x + extrude).toString();
 				const bY:String = (b.y + extrude).toString();
-				const bW:String = (b.width - extrude).toString();
-				const bH:String = (b.height - extrude).toString();
+				const bW:String = (b.width - ext2).toString();
+				const bH:String = (b.height - ext2).toString();
 				xml += "	<SubTexture name='" + subPrefix + bName + "' x='" + bX + "' y='" + bY + "' width='" + bW + "' height='" + bH + "'/>\n"
 			}
 			xml += "</TextureAtlas>\n";
