@@ -105,7 +105,7 @@ package
 		private var packer:RectanglePacker;
 
 		// static consts
-		private static const VERSION:String = "1.1";
+		private static const VERSION:String = "1.2";
 		private static const TITLE:String = "ta-gen v" + VERSION;
 		private static const HELP_TEXT:String = TITLE + <![CDATA[
 
