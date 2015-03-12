@@ -53,6 +53,7 @@ package
 	import com.adobe.images.PNGEncoder;
 	import org.villekoskela.utils.RectanglePacker;
 	import neolit123.utils.BitmapDataQuantize;
+	import neolit123.utils.BitmapDataExtrude;
 
 	[SWF(width='512', height='512', backgroundColor='#ffffff', frameRate='30')]
 
@@ -75,6 +76,7 @@ package
 		private var dimW:uint, dimH:uint;
 		private var dimError:Boolean = false;
 		private var background:uint = 0x0;
+		private var extrude:uint = 0;
 
 		// files and lists
 		private var outFile:File = null;
@@ -105,8 +107,9 @@ package
 		// static consts
 		private static const VERSION:String = "1.1";
 		private static const TITLE:String = "ta-gen v" + VERSION;
-		private static const HELP_TEXT:String =
-<![CDATA[Copyright 2014 and later, Lubomir I. Ivanov. All rights reserved.
+		private static const HELP_TEXT:String = TITLE + <![CDATA[
+
+Copyright 2014 and later, Lubomir I. Ivanov. All rights reserved.
 
 RectanglePacker
 Copyright 2012, Ville Koskela. All rights reserved.
@@ -128,6 +131,7 @@ adl <app-xml> -- arguments
 	-poweroftwo: end dimensions will be a power of 2 square
 	-colorbits <1-8> (def. 8): less than 8 means quantization
 	-dither: apply dithering for colorbits less than 8
+	-extrude <pixels> (def. 0): extrude the edges of each image
 	-verbose: detailed output
 	-help: this screen
 ]]>;
@@ -244,6 +248,9 @@ adl <app-xml> -- arguments
 						colorBits = uint(narg);
 						colorBits < 1 ? 1 : (colorBits > 8 ? 8 : colorBits);
 						log("* argument -colorbits: " + colorBits);
+					} else if (carg == "-extrude") {
+						extrude = uint(narg);
+						log("* argument -extrude: " + extrude);
 					}
 				}
 
@@ -376,10 +383,19 @@ adl <app-xml> -- arguments
 			}
 		}
 
+		private const extrudeRect:Rectangle = new Rectangle(0, 0, 0, 0);
+		private const extrudePoint:Point = new Point(0, 0);
+
 		// called each time the loader loads an image
 		private function loadCompleteHandler(_e:Event):void
 		{
-			const b:Bitmap = new Bitmap((loader.content as Bitmap).bitmapData);
+			var source:BitmapData = (loader.content as Bitmap).bitmapData;
+
+			// perform extrusion if 'extrude' is more than 0
+			if (extrude)
+				source = BitmapDataExtrude.extrude(source, extrude, true, extrudeRect, extrudePoint);
+
+			const b:Bitmap = new Bitmap(source);
 			loader.unload();
 			b.smoothing = true;
 			cont.addChild(b);
@@ -589,10 +605,11 @@ adl <app-xml> -- arguments
 			for (var i:int = 0; i < len; i++)  {
 				var bName:String = files[i].split(folder.nativePath + File.separator).join("");
 				bName = bName.split(File.separator).join("/");
-				const bX:String = bmp[i].x.toString();
-				const bY:String = bmp[i].y.toString();
-				const bW:String = bmp[i].width.toString();
-				const bH:String = bmp[i].height.toString();
+				const b:Bitmap = bmp[i];
+				const bX:String = (b.x + extrude).toString();
+				const bY:String = (b.y + extrude).toString();
+				const bW:String = (b.width - extrude).toString();
+				const bH:String = (b.height - extrude).toString();
 				xml += "	<SubTexture name='" + subPrefix + bName + "' x='" + bX + "' y='" + bY + "' width='" + bW + "' height='" + bH + "'/>\n"
 			}
 			xml += "</TextureAtlas>\n";
