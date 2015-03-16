@@ -372,6 +372,7 @@ adl <app-xml> -- arguments
 				urlRequest.url = files[0];
 				startTime = getTimer();
 				log("* loading " + files.length + " files...");
+				log("* each image will be extruded by " + extrude + " pixels");
 				loader.load(urlRequest);
 			} else {
 				error("nothing to load!");
