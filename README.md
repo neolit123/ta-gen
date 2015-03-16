@@ -1,5 +1,6 @@
 # ta-gen v1.3
-A command line Texture Atlas generator for Starling
+A command line Texture Atlas generator for the Starling framework:
+https://github.com/Gamua/Starling-Framework
 
 ### Authors
 
