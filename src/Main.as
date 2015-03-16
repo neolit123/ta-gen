@@ -427,10 +427,11 @@ adl <app-xml> -- arguments
 					continue;
 				}
 				const path:String = list[i].nativePath;
-				// LAZY;
-				if (path.toLowerCase().indexOf(".jpg") != -1 ||
-				    path.toLowerCase().indexOf(".png") != -1 ||
-				    path.toLowerCase().indexOf(".gif") != -1)
+				const lcPath:String = path.toLowerCase();
+				if (lcPath.indexOf(".jpeg") == lcPath.length - 5 ||
+				    lcPath.indexOf(".jpg") == lcPath.length - 4 ||
+				    lcPath.indexOf(".png") == lcPath.length - 4 ||
+				    lcPath.indexOf(".gif") == lcPath.length - 4)
 					files.push(path);
 			}
 		}
