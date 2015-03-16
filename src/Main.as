@@ -46,6 +46,8 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.InvokeEvent;
+	import flash.events.ErrorEvent;
+	import flash.events.UncaughtErrorEvent;
 
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
@@ -141,6 +143,8 @@ adl <app-xml> -- arguments
 		public function Main():void
 		{
 			initialTime = getTimer();
+
+			loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleErrors);
 
 			// add the invoke handler
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invokeEventHandler);
@@ -379,6 +383,23 @@ adl <app-xml> -- arguments
 				if (!hasGUI)
 					exit();
 			}
+		}
+
+		private function handleErrors(_e:UncaughtErrorEvent):void
+		{
+			_e.preventDefault();
+
+			const err:* = _e.error;
+			var msg:String = "";
+
+			if (err is Error)
+				 msg += error.getStackTrace();
+			else if (err is ErrorEvent)
+				 msg += err.text;
+			else
+				 msg += err.toString();
+
+			error(msg, true);
 		}
 
 		// check if path should be ignored
