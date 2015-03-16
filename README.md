@@ -67,7 +67,8 @@ list of arguments (could be out of date):
 
 ```
 
-if you don't specify -in or -out the app becomes semi-GUI and it will ask you
-where to find the source files and where to write the output PNG / XML pair.
+if you specify -gui and don't specify -in and -out the app becomes semi-GUI
+and it will ask you where to find the source files and where to write the
+output PNG / XML pair.  
 
 for a usage example see ./test
