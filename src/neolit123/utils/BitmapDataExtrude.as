@@ -30,7 +30,7 @@ package neolit123.utils
 	public class BitmapDataExtrude
 	{
 		/* performs extrusion of the outer most pixels of a BitmapData with a
-		 * repentition of _extrudePixels.
+		 * repetition of _extrudePixels.
 		 *
 		 * first left and right parts are extruded, then top and bottom take
 		 * the new left and right pixels and the original middle part to complete
