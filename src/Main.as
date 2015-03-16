@@ -77,6 +77,7 @@ package
 		private var dimError:Boolean = false;
 		private var background:uint = 0x0;
 		private var extrude:uint = 0;
+		private var hasGUI:Boolean = false;
 
 		// files and lists
 		private var outFile:File = null;
@@ -86,10 +87,10 @@ package
 		private var files:Array = [];
 
 		// UI
-		private var cont:Sprite = new Sprite();
-		private var contBorder:Shape = new Shape();
-		private var msk:Sprite = new Sprite();
-		private var textLog:TextField = new TextField();
+		private var cont:Sprite;
+		private var contBorder:Shape;
+		private var msk:Sprite;
+		private var textLog:TextField;
 
 		// loader
 		private var loader:Loader = new Loader();
@@ -132,6 +133,7 @@ adl <app-xml> -- arguments
 	-colorbits <1-8> (def. 8): less than 8 means quantization
 	-dither: apply dithering for colorbits less than 8
 	-extrude <pixels> (def. 0): extrude the edges of each image
+	-gui: enable a simple user interface
 	-verbose: detailed output
 	-help: this screen
 ]]>;
@@ -144,31 +146,7 @@ adl <app-xml> -- arguments
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invokeEventHandler);
 
 			// the main container where images will be stored
-			addChild(cont);
-
-			// a visual border
-			contBorder.graphics.lineStyle(0.0, 0x00ff00);
-			contBorder.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			addChild(contBorder);
-
-			// a click mask
-			msk.graphics.beginFill(0x00ff00);
-			msk.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			msk.graphics.endFill();
-			msk.alpha = 0.0;
-			addChild(msk);
-			msk.addEventListener(MouseEvent.CLICK, clickHandler);
-
-			// a textfield to write the log to
-			textLog.border = true;
-			textLog.background = true;
-			textLog.multiline = true;
-			textLog.wordWrap = true;
-			textLog.width = stage.stageWidth;
-			textLog.height = stage.stageHeight / 4;
-			textLog.y = stage.stageHeight - textLog.height;
-			textLog.defaultTextFormat = new TextFormat("_typewriter");
-			addChild(textLog);
+			cont = new Sprite();
 
 			// add listener to the loader
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadCompleteHandler);
@@ -177,6 +155,8 @@ adl <app-xml> -- arguments
 		// called each time the app starts
 		public function invokeEventHandler(_e:InvokeEvent):void
 		{
+			NativeApplication.nativeApplication.activeWindow.visible = false;
+
 			var i:int;
 			args = _e.arguments;
 			currentDir = _e.currentDirectory;
@@ -207,6 +187,10 @@ adl <app-xml> -- arguments
 					} else if (carg == "-dither") {
 						useDither = true;
 						log("* argument -dither");
+					} else if (carg == "-gui") {
+						hasGUI = true;
+						createGUI();
+						log("* argument -gui");
 					}
 					if (i == len - 1) // bellow are two-part arguments
 						break;
@@ -275,19 +259,63 @@ adl <app-xml> -- arguments
 					}
 				}
 
+				if (!hasGUI && !outFile)
+					error("output PNG not set", true);
+
 				if (folders.length) {
 					for (i = 0; i < folders.length; i++)
 						traverse(folders[i]);
 					processFolders();
 					return;
+				} else {
+					if (!hasGUI)
+						error("missing input", true);
 				}
 			}
 
-			// show open dialog
-			log("* click above to select a folder");
-			folder = new File();
-			folder.addEventListener(Event.SELECT, browseSelectHandler);
-			folder.browseForDirectory("Select folder");
+			if (hasGUI) {
+				// show open dialog
+				log("* click above to select a folder");
+				folder = new File();
+				folder.addEventListener(Event.SELECT, browseSelectHandler);
+				folder.browseForDirectory("Select folder");
+			}
+		}
+
+		private function createGUI():void
+		{
+			NativeApplication.nativeApplication.activeWindow.visible = true;
+
+			// add the main container
+			addChild(cont);
+
+			// a visual border
+			contBorder = new Shape();
+			contBorder.graphics.lineStyle(0.0, 0x00ff00);
+			contBorder.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			contBorder.graphics.endFill();
+			addChild(contBorder);
+
+			// a click mask
+			msk = new Sprite();
+			msk.graphics.beginFill(0x00ff00);
+			msk.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			msk.graphics.endFill();
+			msk.alpha = 0.0;
+			addChild(msk);
+			msk.addEventListener(MouseEvent.CLICK, clickHandler);
+
+			// a textfield to write the log to
+			textLog = new TextField();
+			textLog.border = true;
+			textLog.background = true;
+			textLog.multiline = true;
+			textLog.wordWrap = true;
+			textLog.width = stage.stageWidth;
+			textLog.height = stage.stageHeight / 4;
+			textLog.y = stage.stageHeight - textLog.height;
+			textLog.defaultTextFormat = new TextFormat("_typewriter");
+			addChild(textLog);
 		}
 
 		private function isPowerOfTwo(_x:uint):Boolean
@@ -297,15 +325,17 @@ adl <app-xml> -- arguments
 
 		private function toPowerOfTwo(_x:uint):uint
 		{
-			return  Math.pow(2, Math.round(Math.log(_x) / Math.LN2));
+			return Math.pow(2, Math.round(Math.log(_x) / Math.LN2));
 		}
 
 		private function log(_text:String):void
 		{
 			if (verbose)
 				trace(_text);
-			textLog.appendText(_text + "\n");
-			textLog.scrollV = textLog.maxScrollV;
+			if (hasGUI) {
+				textLog.appendText(_text + "\n");
+				textLog.scrollV = textLog.maxScrollV;
+			}
 		}
 
 		private function warning(_text:String):void
@@ -346,7 +376,9 @@ adl <app-xml> -- arguments
 				log("* loading " + files.length + " files...");
 				loader.load(urlRequest);
 			} else {
-				log("* nothing to load!");
+				error("nothing to load!");
+				if (!hasGUI)
+					exit();
 			}
 		}
 
@@ -478,12 +510,14 @@ adl <app-xml> -- arguments
 			}
 
 			// scale the container and border visually
-			const sX:Number = stage.stageWidth / dimW;
-			const sY:Number = (stage.stageHeight - textLog.height) / dimH;
-			const sMin:Number = Math.min(sX, sY) * 0.999;
-			contBorder.width = dimW * sMin;
-			contBorder.height = dimH * sMin;
-			cont.scaleY = cont.scaleX = sMin;
+			if (hasGUI) {
+				const sX:Number = stage.stageWidth / dimW;
+				const sY:Number = (stage.stageHeight - textLog.height) / dimH;
+				const sMin:Number = Math.min(sX, sY) * 0.999;
+				contBorder.width = dimW * sMin;
+				contBorder.height = dimH * sMin;
+				cont.scaleY = cont.scaleX = sMin;
+			}
 
 			if (outFile) {
 				saveFiles(outFile);
