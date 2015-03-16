@@ -155,8 +155,6 @@ adl <app-xml> -- arguments
 		// called each time the app starts
 		public function invokeEventHandler(_e:InvokeEvent):void
 		{
-			NativeApplication.nativeApplication.activeWindow.visible = false;
-
 			var i:int;
 			args = _e.arguments;
 			currentDir = _e.currentDirectory;
@@ -284,7 +282,7 @@ adl <app-xml> -- arguments
 
 		private function createGUI():void
 		{
-			NativeApplication.nativeApplication.activeWindow.visible = true;
+			NativeApplication.nativeApplication.openedWindows[0].visible = true;
 
 			// add the main container
 			addChild(cont);
