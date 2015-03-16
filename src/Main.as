@@ -1,5 +1,5 @@
 /**
- * ta-gen v1.0
+ * ta-gen
  *
  * Copyright 2014 and later Lubomir I. Ivanov. All rights reserved.
  *
