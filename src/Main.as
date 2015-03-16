@@ -82,9 +82,9 @@ package
 		// files and lists
 		private var outFile:File = null;
 		private var folder:File = null;
-		private var folders:Array = [];
-		private var ignore:Array = [];
-		private var files:Array = [];
+		private var folders:Vector.<File> = new Vector.<File>();
+		private var ignore:Vector.<File> = new Vector.<File>();
+		private var files:Vector.<String> = new Vector.<String>();
 
 		// UI
 		private var cont:Sprite;
