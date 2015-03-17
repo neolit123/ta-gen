@@ -7,6 +7,7 @@ https://github.com/Gamua/Starling-Framework
 - interface by Lubomir I. Ivanov
 - RectanglePacker by Ville Koskela
 - PNGEncoder and Flash/AIR by Adobe
+- PNGEncoder2 by Cameron Desrochers
 - dither based on code by Ralph Hauwert
 
 ### Description
@@ -18,8 +19,11 @@ only and is quite portable.
 
 ### Requirements
 
-- recent AIR SDK
-- mxmlc and adl in PATH
+- a recent AIR SDK
+- 'mxmlc' and 'adl' in PATH
+
+for some reason the much faster PNGEncoder2 only works with AIR SDK v17.
+for older AIR runtimes the PNGEncoder from Adobe will be used automatically.
 
 ### Building
 
