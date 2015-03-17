@@ -589,6 +589,9 @@ adl <app-xml> -- arguments
 			cont.scaleX = cont.scaleY = 1.0;
 			var bmd:BitmapData;
 
+			// if the first byte of the background color is 0xFF the image is opaque
+			const isTransparent:Boolean = !((background >>> 24) == 0xFF);
+
 			// quantize
 			if (colorBits < 8) {
 				bmd = new BitmapData(dimW, dimW, true, 0x0);
@@ -602,12 +605,13 @@ adl <app-xml> -- arguments
 					log("* quantizing...");
 					BitmapDataQuantize.quantize(bmd, levels);
 				}
-				const back:BitmapData = new BitmapData(dimW, dimW, true, background);
+
+				const back:BitmapData = new BitmapData(dimW, dimW, isTransparent, background);
 				back.copyPixels(bmd, back.rect, new Point(0, 0), null, null, true);
 				bmd.dispose();
 				bmd = back;
 			} else {
-				bmd = new BitmapData(dimW, dimW, true, background);
+				bmd = new BitmapData(dimW, dimW, isTransparent, background);
 				bmd.draw(cont);
 			}
 			cont.scaleX = cont.scaleY = scale;
