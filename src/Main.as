@@ -52,6 +52,7 @@ package
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
 
+	import PNGEncoder2;
 	import com.adobe.images.PNGEncoder;
 	import org.villekoskela.utils.RectanglePacker;
 	import neolit123.utils.BitmapDataQuantize;
@@ -119,6 +120,11 @@ Copyright 2012, Ville Koskela. All rights reserved.
 
 PNGEncoder
 Copyright 2008, Adobe Systems Incorporated. All rights reserved.
+
+PNGEncoder2
+Copyright 2008, Adobe Systems Incorporated. All rights reserved.
+Copyright 2011, Pimm Hogeling and Edo Rivai. All rights reserved.
+Copyright 2011-2015, Cameron Desrochers. All rights reserved.
 
 usage:
 adl <app-xml> -- arguments
@@ -611,7 +617,10 @@ adl <app-xml> -- arguments
 			// saving...
 			log("* saving...");
 			startTime = getTimer();
-			const ba:ByteArray = PNGEncoder.encode(bmd);
+
+			// NOTE; PNGEncoder2 seems to crash ADL / AIR v16, use PNGEncoder for AIR v16 and older
+			const versionMajor:uint = NativeApplication.nativeApplication.runtimeVersion.split(".")[0];
+			const ba:ByteArray = versionMajor < 17 ? PNGEncoder.encode(bmd) : PNGEncoder2.encode(bmd);
 			bmd.dispose();
 
 			var stream:FileStream;

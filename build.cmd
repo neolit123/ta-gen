@@ -1,2 +1,2 @@
 @echo off
-mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf
+mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib
