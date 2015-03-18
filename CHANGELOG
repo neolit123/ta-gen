@@ -1,3 +1,10 @@
+* v1.4 - 18.3.2015
+- add support for different PNG encoder options from the command line
+- PNGEncoder.as optimizations and RGB (24bit) support
+- added the optional PNGEncoder2 from Cameron Desrochers
+- improved build scripts
+- framerate and logger improvements
+
 * v1.3 - 16.3.2015
 - the UI is now off by default unless -gui is specified
 - added improved error handling
