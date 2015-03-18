@@ -1,18 +1,15 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-::
-:: version to be written to the descriptor XML
-::
 set VERSION_TAGEN=1.3
-::
+set BUILD_COMMAND=mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib
 
 :: extract the ADL version from the command line
 set VERSION_ADL=
 set TMPFILE=.\adl.tmp
 set /a c=0
 
-adl 2> nul > !TMPFILE!
+adl 2> NUL > !TMPFILE!
 for /f "tokens=*" %%a in (%TMPFILE%) do (
 	if !c! equ 1 (
 		set VERSION_ADL=%%a & goto found_version
@@ -25,8 +22,9 @@ goto error
 set VERSION_ADL=%VERSION_ADL:~8,4%
 echo found ADL version: %VERSION_ADL%
 cmd /c writedesc %VERSION_ADL% %VERSION_TAGEN%
+
 echo building...
-cmd /c mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib
+cmd /c %BUILD_COMMAND%
 
 goto end
 
