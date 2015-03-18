@@ -36,6 +36,7 @@ package
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
+	import flash.display.PNGEncoderOptions
 
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -81,6 +82,7 @@ package
 		private var background:uint = 0x0;
 		private var extrude:uint = 0;
 		private var hasGUI:Boolean = false;
+		private var pngEncoder:uint = ENC_PNGENCODER_AS;
 
 		// files and lists
 		private var outFile:File = null;
@@ -108,7 +110,24 @@ package
 		// packer
 		private var packer:RectanglePacker;
 
-		// static consts
+		// encoders
+		private static const ENC_PNGENCODER_AS:uint = 0;
+		private static const ENC_BITMAPDATA_ENCODE:uint = 1;
+		private static const ENC_BITMAPDATA_ENCODE_FAST:uint = 2;
+		private static const ENC_PNGENCODER2_FAST:uint = 3;
+		private static const ENC_PNGENCODER2_NORMAL:uint = 4;
+		private static const ENC_PNGENCODER2_GOOD:uint = 5;
+
+		private static const ENC_LIST:Vector.<String> = Vector.<String>([
+			"ENC_PNGENCODER_AS",
+			"ENC_BITMAPDATA_ENCODE",
+			"ENC_BITMAPDATA_ENCODE_FAST",
+			"ENC_PNGENCODER2_FAST",
+			"ENC_PNGENCODER2_NORMAL",
+			"ENC_PNGENCODER2_GOOD"
+		]);
+
+		// version and title
 		private static const VERSION:String = "1.3";
 		private static const TITLE:String = "ta-gen v" + VERSION;
 		private static const HELP_TEXT:String = TITLE + <![CDATA[
@@ -120,6 +139,7 @@ Copyright 2012, Ville Koskela. All rights reserved.
 
 PNGEncoder
 Copyright 2008, Adobe Systems Incorporated. All rights reserved.
+Copyright 2015, Lubomir I. Ivanov. All rights reserved.
 
 PNGEncoder2
 Copyright 2008, Adobe Systems Incorporated. All rights reserved.
@@ -142,6 +162,8 @@ adl <app-xml> -- arguments
 	-dither: apply dithering for colorbits less than 8
 	-extrude <pixels> (def. 0): extrude the edges of each image
 	-gui: enable a simple user interface
+	-pngencoder <0-5> (def: 0): see -listpngencoders
+	-listpngencoders: dump the png encoder list
 	-verbose: detailed output
 	-help: this screen
 ]]>;
@@ -182,6 +204,11 @@ adl <app-xml> -- arguments
 				if (args[0] == "-help") {
 					verbose = true;
 					log(HELP_TEXT);
+					exit();
+					return;
+				} else if (args[0] == "-listpngencoders") {
+					verbose = true;
+					log(listPNGEncoders());
 					exit();
 					return;
 				}
@@ -243,6 +270,11 @@ adl <app-xml> -- arguments
 					} else if (carg == "-extrude") {
 						extrude = uint(narg);
 						log("* argument -extrude: " + extrude);
+					} else if (carg == "-pngencoder") {
+						pngEncoder = uint(narg);
+						if (pngEncoder > 5)
+							pngEncoder = ENC_PNGENCODER_AS;
+						log("* argument -pngencoder: " + ENC_LIST[pngEncoder]);
 					}
 				}
 
@@ -622,15 +654,14 @@ adl <app-xml> -- arguments
 			log("* saving...");
 			startTime = getTimer();
 
-			// NOTE; PNGEncoder2 seems to crash ADL / AIR v16, use PNGEncoder for AIR v16 and older
-			const versionMajor:uint = NativeApplication.nativeApplication.runtimeVersion.split(".")[0];
-			const ba:ByteArray = versionMajor < 17 ? PNGEncoder.encode(bmd) : PNGEncoder2.encode(bmd);
+			// encode PNG
+			const ba:ByteArray = encodePNG(bmd);
 			bmd.dispose();
 
 			var stream:FileStream = new FileStream();
 			var pos:uint;
 
-			// save png
+			// save PNG
 			const PNG:String = ".png";
 			const pathLowerCase:String = _outFile.nativePath.toLowerCase();
 			if (pathLowerCase.indexOf(PNG) == -1)
@@ -662,6 +693,64 @@ adl <app-xml> -- arguments
 				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
 				exit();
 			}
+		}
+
+		private function encodePNG(_bmd:BitmapData):ByteArray
+		{
+			var opt:PNGEncoderOptions;
+			var ba:ByteArray;
+			const versionMajor:uint = uint(NativeApplication.nativeApplication.runtimeVersion.split(".")[0]);
+
+			if (versionMajor < 17 && pngEncoder > 2) {
+				if (pngEncoder == ENC_PNGENCODER2_FAST)
+					pngEncoder = ENC_BITMAPDATA_ENCODE_FAST;
+				else
+					pngEncoder = ENC_PNGENCODER_AS;
+				log("* runtime is version " + versionMajor + ". defaulting to encoder " + pngEncoder + "!");
+			}
+
+			switch (pngEncoder)	{
+			case ENC_PNGENCODER_AS:
+				ba = PNGEncoder.encode(_bmd);
+				break;
+			case ENC_BITMAPDATA_ENCODE:
+				opt = new PNGEncoderOptions();
+				ba = _bmd.encode(_bmd.rect, opt);
+				break;
+			case ENC_BITMAPDATA_ENCODE_FAST:
+				opt = new PNGEncoderOptions();
+				opt.fastCompression = true;
+				ba = _bmd.encode(_bmd.rect, opt);
+				break;
+			case ENC_PNGENCODER2_FAST:
+				PNGEncoder2.level = CompressionLevel.FAST;
+				ba = PNGEncoder2.encode(_bmd);
+				break;
+			case ENC_PNGENCODER2_NORMAL:
+				PNGEncoder2.level = CompressionLevel.NORMAL;
+				ba = PNGEncoder2.encode(_bmd);
+				break;
+			case ENC_PNGENCODER2_GOOD:
+				PNGEncoder2.level = CompressionLevel.GOOD;
+				ba = PNGEncoder2.encode(_bmd);
+				break;
+			}
+
+			if (!ba)
+				throw Error("encodePNG() failed!");
+			return ba;
+		}
+
+		// list the PNG encoders
+		private function listPNGEncoders():String
+		{
+			var str:String = "";
+			const len:uint = ENC_LIST.length;
+
+			for (var i:uint = 0; i < len; i++)
+				str += "\n" + i.toString() + ": " + ENC_LIST[i];
+
+			return str;
 		}
 
 		// generate the XML string
