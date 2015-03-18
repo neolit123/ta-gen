@@ -29,8 +29,11 @@ for older AIR runtimes the PNGEncoder from Adobe will be used automatically.
 
 run build.sh (osx) or build.cmd (win32). resulted SWF will be written to ./bin.
 
-edit ta-gen.xml if needed - you may have to adjust the "application xmlns=..."
-value to fit your adl version.
+the build scripts will also call - writedesc.[cmd/sh], that will generate
+a descriptor based on the "Version X.X.X.X" variable from the 'adl' output.
+the descriptor is written in ./bin/ta-gen.xml.
+
+edit ./bin/ta-gen.xml if needed.
 
 ### Installation
 
