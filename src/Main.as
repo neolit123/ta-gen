@@ -311,6 +311,9 @@ adl <app-xml> -- arguments
 					if (!hasGUI)
 						error("missing input", true);
 				}
+			} else { // if no command line argumenst are passed, create GUI
+				hasGUI = true;
+				createGUI();
 			}
 
 			if (hasGUI) {
