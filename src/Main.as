@@ -627,7 +627,8 @@ adl <app-xml> -- arguments
 			const ba:ByteArray = versionMajor < 17 ? PNGEncoder.encode(bmd) : PNGEncoder2.encode(bmd);
 			bmd.dispose();
 
-			var stream:FileStream;
+			var stream:FileStream = new FileStream();
+			var pos:uint;
 
 			// save png
 			const PNG:String = ".png";
@@ -635,12 +636,12 @@ adl <app-xml> -- arguments
 			if (pathLowerCase.indexOf(PNG) == -1)
 				_outFile = _outFile.resolvePath(_outFile.nativePath + PNG);
 
-			stream = new FileStream();
 			stream.open(_outFile, FileMode.WRITE);
 			stream.writeBytes(ba);
+			pos = stream.position;
 			stream.close();
 
-			log("* file saved: " + _outFile.nativePath);
+			log("* file saved (" + pos + " bytes): " + _outFile.nativePath);
 
 			// save XML
 			var pngFile:String = _outFile.nativePath;
@@ -649,12 +650,12 @@ adl <app-xml> -- arguments
 			const xmlPath:String = _outFile.nativePath.split(PNG).join(".xml");
 			_outFile = _outFile.resolvePath(xmlPath);
 
-			stream = new FileStream();
 			stream.open(_outFile, FileMode.WRITE);
 			stream.writeUTFBytes(xml);
+			pos = stream.position;
 			stream.close();
 
-			log("* file saved: " + _outFile.nativePath);
+			log("* file saved (" + pos + " bytes): " + _outFile.nativePath);
 			log("* done saving in " + (getTimer() - startTime) + " ms");
 
 			if (outFile) {
