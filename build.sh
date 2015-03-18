@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION_TAGEN=1.3
+VERSION_TAGEN=1.4
 BUILD_COMMAND="mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib"
 
 TMPFILE=./adl.tmp

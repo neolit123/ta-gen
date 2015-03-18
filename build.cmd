@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set VERSION_TAGEN=1.3
+set VERSION_TAGEN=1.4
 set BUILD_COMMAND=mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib
 
 :: extract the ADL version from the command line
