@@ -59,6 +59,8 @@ package neolit123.utils
 			// error checking
 			if (!_bmd)
 				throw Error("BitmapDataQuantize::quantize(): source cannot be null!");
+			if (!_levels)
+				throw Error("BitmapDataQuantize::quantize(): levels cannot be zero!");
 
 			// normalize levels
 			const norm:Number = normalizeLevels(_levels, 255);
@@ -91,6 +93,8 @@ package neolit123.utils
 			// error checking
 			if (!_bmd)
 				throw Error("BitmapDataQuantize::quantizeFloydSteinberg(): source cannot be null!");
+			if (!_levels)
+				throw Error("BitmapDataQuantize::quantizeFloydSteinberg(): levels cannot be zero!");
 
 			// normalize levels
 			const norm:Number = normalizeLevels(_levels, 255);
