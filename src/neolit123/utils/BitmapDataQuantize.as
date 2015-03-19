@@ -41,7 +41,7 @@ package neolit123.utils
 		private static function normalizeLevels(_levels:Number, _max:Number = 255):Number
 		{
 			if (_levels > _max)
-				_levels = _max;
+				return 1.0;
 			return _max / _levels;
 		}
 
