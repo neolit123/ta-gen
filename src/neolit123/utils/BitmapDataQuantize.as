@@ -31,12 +31,14 @@ package neolit123.utils
 		private static const rVal:Array = new Array(256);
 		private static const gVal:Array = new Array(256);
 		private static const bVal:Array = new Array(256);
-		private static const point:Point = new Point();
+		private static const aVal:Array = new Array(256);
+
+		private static const point:Point = new Point(0, 0);
 
 		private static const INV_255:Number = 1.0 / 255.0;
 
 		// clamp levels to a max value
-		private static function normalizeLevels(_levels:uint, _max:uint = 255):uint
+		private static function normalizeLevels(_levels:Number, _max:Number = 255):Number
 		{
 			if (_levels > _max)
 				_levels = _max;
@@ -52,121 +54,165 @@ package neolit123.utils
 		// raw quantization / posterization
 		public static function quantize(_bmd:BitmapData, _levels:uint):void
 		{
+			// error checking
+			if (!_bmd)
+				throw Error("BitmapDataQuantize::quantize(): source cannot be null!");
+
 			// normalize levels
 			const norm:Number = normalizeLevels(_levels, 255);
+			const inv255Levels:Number = INV_255 * _levels;
 
 			// create pallete
 			for (var i:uint = 0; i < 256; i++) {
-	            const v:uint = Math.round(Math.round((i * INV_255) * _levels) * norm);
-	            rVal[i] = v << 16;
-	            gVal[i] = v << 8;
-	            bVal[i] = v;
-            }
+				const v:uint = uint(i * inv255Levels + 0.5) * norm;
+				aVal[i] = v << 24;
+				rVal[i] = v << 16;
+				gVal[i] = v << 8;
+				bVal[i] = v;
+			}
 
 			// posterize
-			_bmd.paletteMap(_bmd, _bmd.rect, point, rVal, gVal, bVal);
+			_bmd.paletteMap(_bmd, _bmd.rect, point, rVal, gVal, bVal, aVal);
 		}
 
-		/* optimized version of Ralph Hauwert's Floyd Steinberg AS3.0 implementation:
+		/* a heavily optimized version of Ralph Hauwert's Floyd Steinberg AS3.0
+		 * implementation:
 		 * https://code.google.com/p/imageditheringas3/
+		 *
+		 * NOTES:
+		 * - we do not apply the FS kernel to the alpha channel!
+		 * - fast [0, 255] clamp from here:
+		 * http://codereview.stackexchange.com/questions/6502/fastest-way-to-clamp-an-integer-to-the-range-0-255
 		 */
-		public static function quantizeFloydSteinberg(_bmd:BitmapData, _levels):void
+		public static function quantizeFloydSteinberg(_bmd:BitmapData, _levels:uint):void
 		{
+			// error checking
+			if (!_bmd)
+				throw Error("BitmapDataQuantize::quantizeFloydSteinberg(): source cannot be null!");
+
 			// normalize levels
 			const norm:Number = normalizeLevels(_levels, 255);
 
-			//The FS kernel...note the 16th. Optimisation can still be done.
-			const d1:Number = 7.0 / 16.0;
-			const d2:Number = 3.0 / 16.0;
-			const d3:Number = 5.0 / 16.0;
-			const d4:Number = 1.0 / 16.0;
+			// the kernel
+			const d1:Number = 0.4375; // 7.0 / 16.0
+			const d2:Number = 0.1875; // 3.0 / 16.0
+			const d3:Number = 0.3125; // 5.0 / 16.0
+			const d4:Number = 0.0625; // 1.0 / 16.0
 
-			// for each pixel in the bitmap
+			// some constants
 			const h:uint = _bmd.height;
 			const w:uint = _bmd.width;
+			const len:uint = w * h;
+			const len1:uint = len - 1;
+			const inv255Levels:Number = INV_255 * _levels;
 
-			for (var y:uint = 0; y < h; y++) {
-				for (var x:uint = 0; x < w; x++) {
+			// write the entire BitmapData into a uint Vector
+			const pix:Vector.<uint> = _bmd.getVector(_bmd.rect);
 
-					// clobber variables
-					var c:uint, nc:uint, lc:uint;
-					var r:uint, g:uint, b:uint;
-					var nr:uint, ng:uint, nb:uint;
+			for (var i:uint = 0; i < len; i++) {
 
-					var er:int, eg:int, eb:int;
-					var lr:int, lg:int, lb:int;
+				// get x, y from index
+				const x:uint = i % w;
+				const y:uint = i / w;
 
-					// retrieve current RGB value.
-					c = _bmd.getPixel(x, y);
-					r = c >> 16 & 0xFF;
-					g = c >> 8 & 0xFF;
-					b = c & 0xFF;
+				// some clobber variables
+				var idx:int, j:int;
+				var c:uint;
+				var a:int, r:int, g:int, b:int;
+				var na:uint, nr:uint, ng:uint, nb:uint;
+				var er:int, eg:int, eb:int;
 
-					// normalize and scale to the number of _levels.
-					// basically a cheap but suboptimal form of color quantization.
-					nr = Math.round((r * INV_255) * _levels) * norm;
-					ng = Math.round((g * INV_255) * _levels) * norm;
-					nb = Math.round((b * INV_255) * _levels) * norm;
+				// get current pixel
+				c = pix[i];
+				a = c >> 24 & 0xFF;
+				r = c >> 16 & 0xFF;
+				g = c >> 8 & 0xFF;
+				b = c & 0xFF;
 
-					// set the current pixel.
-					nc = nr << 16 | ng << 8 | nb;
-					_bmd.setPixel(x, y, nc);
+				// normalize each channel
+				na = uint(a * inv255Levels + 0.5) * norm;
+				nr = uint(r * inv255Levels + 0.5) * norm;
+				ng = uint(g * inv255Levels + 0.5) * norm;
+				nb = uint(b * inv255Levels + 0.5) * norm;
 
-					// quantization error.
-					er = r - nr;
-					eg = g - ng;
-					eb = b - nb;
+				// update current pixel
+				pix[i] = na << 24 | nr << 16 | ng << 8 | nb;
 
-					// apply the kernel:
-					// +1, 0
-					lc = _bmd.getPixel(x + 1, y);
-					lr = (lc >> 16 & 0xFF) + (d1 * er);
-					lg = (lc >> 8 & 0xFF) + (d1 * eg);
-					lb = (lc & 0xFF) + (d1 * eb);
+				// get quantization error
+				er = r - nr;
+				eg = g - ng;
+				eb = b - nb;
 
-					// clip & set
-					lr = lr < 0 ? 0 : (lr > 255 ? 255 : lr);
-					lg = lg < 0 ? 0 : (lg > 255 ? 255 : lg);
-					lb = lb < 0 ? 0 : (lb > 255 ? 255 : lb);
-					_bmd.setPixel(x + 1, y, lr << 16 | lg << 8 | lb);
+				// apply the kernel
 
-					// -1, +1
-					lc = _bmd.getPixel(x - 1, y + 1);
-					lr = (lc >> 16 & 0xFF) + (d2 * er);
-					lg = (lc >> 8 & 0xFF) + (d2 * eg);
-					lb = (lc & 0xFF) + (d2 * eb);
+				// +1, 0
+				idx = i + 1;
+				if (idx < len1) {
+					c = pix[idx];
+					a = c >> 24 & 0xFF;
+					r = (c >> 16 & 0xFF) + d1 * er;
+					g = (c >> 8 & 0xFF) + d1 * eg;
+					b = (c & 0xFF) + d1 * eb;
 
-					// clip & set
-					lr = lr < 0 ? 0 : (lr > 255 ? 255 : lr);
-					lg = lg < 0 ? 0 : (lg > 255 ? 255 : lg);
-					lb = lb < 0 ? 0 : (lb > 255 ? 255 : lb);
-					_bmd.setPixel(x - 1, y + 1, lr << 16 | lg << 8 | lb);
+					// clamp the r, g, b values to [0, 255]
+					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
+					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
+					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
 
-					// 0, +1
-					lc = _bmd.getPixel(x, y + 1);
-					lr = (lc >> 16 & 0xFF) + (d3 * er);
-					lg = (lc >> 8 & 0xFF) + (d3 * eg);
-					lb = (lc & 0xFF) + (d3 * eb);
+					pix[idx] = a << 24 | r << 16 | g << 8 | b;
+				}
 
-					// clip & set
-					lr = lr < 0 ? 0 : (lr > 255 ? 255 : lr);
-					lg = lg < 0 ? 0 : (lg > 255 ? 255 : lg);
-					lb = lb < 0 ? 0 : (lb > 255 ? 255 : lb);
-					_bmd.setPixel(x, y + 1, lr << 16 | lg << 8 | lb);
+				// -1, +1
+				idx = (y + 1) * w + x - 1;
+				if (idx < len1 && idx > -1) {
+					c = pix[idx];
+					a = c >> 24 & 0xFF;
+					r = (c >> 16 & 0xFF) + d2 * er;
+					g = (c >> 8 & 0xFF) + d2 * eg;
+					b = (c & 0xFF) + d2 * eb;
 
-					// +1, +1
-					lc = _bmd.getPixel(x + 1, y + 1);
-					lr = (lc >> 16 & 0xFF) + (d4 * er);
-					lg = (lc >> 8 & 0xFF) + (d4 * eg);
-					lb = (lc & 0xFF) + (d4 * eb);
+					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
+					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
+					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
 
-					// clip & set
-					lr = lr < 0 ? 0 : (lr > 255 ? 255 : lr);
-					lg = lg < 0 ? 0 : (lg > 255 ? 255 : lg);
-					lb = lb < 0 ? 0 : (lb > 255 ? 255 : lb);
-					_bmd.setPixel(x + 1, y + 1, lr << 16 | lg << 8 | lb);
+					pix[idx] = a << 24 | r << 16 | g << 8 | b;
+				}
+
+				// 0, +1
+				idx = (y + 1) * w + x;
+				if (idx < len1 && idx > -1) {
+					c = pix[idx];
+					a = c >> 24 & 0xFF;
+					r = (c >> 16 & 0xFF) + d3 * er;
+					g = (c >> 8 & 0xFF) + d3 * eg;
+					b = (c & 0xFF) + d3 * eb;
+
+					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
+					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
+					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
+
+					pix[idx] = a << 24 | r << 16 | g << 8 | b;
+				}
+
+				// +1, +1
+				idx = (y + 1) * w + x + 1;
+				if (idx < len1 && idx > -1) {
+					c = pix[idx];
+					a = c >> 24 & 0xFF;
+					r = (c >> 16 & 0xFF) + d4 * er;
+					g = (c >> 8 & 0xFF) + d4 * eg;
+					b = (c & 0xFF) + d4 * eb;
+
+					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
+					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
+					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
+
+					pix[idx] = a << 24 | r << 16 | g << 8 | b;
 				}
 			}
+
+			// update the BitmapData from the Vector
+			_bmd.setVector(_bmd.rect, pix);
 		}
 	}
 }
