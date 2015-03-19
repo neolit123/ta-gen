@@ -48,7 +48,9 @@ package neolit123.utils
 		// convert bits to levels
 		public static function bitsToLevels(_bits:uint):uint
 		{
-			return 1 << uint(_bits - 1);
+			if (!_bits)
+				return 1;
+			return 1 << (_bits - 1);
 		}
 
 		// raw quantization / posterization
