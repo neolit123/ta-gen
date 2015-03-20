@@ -50,7 +50,7 @@ package neolit123.utils
 		{
 			if (!_bits)
 				return 1;
-			return 1 << (_bits - 1);
+			return (1 << _bits) - 1;
 		}
 
 		// raw quantization / posterization
