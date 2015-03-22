@@ -825,7 +825,7 @@ adl <app-xml> -- arguments
 			}
 		}
 
-		// for a list out off an input Vector.<String>
+		// make a list out off an input vector
 		private function enumerateList(_vec:Vector.<String>):String
 		{
 			var str:String = "";
