@@ -497,12 +497,14 @@ adl <app-xml> -- arguments
 			const err:* = _e.error;
 			var msg:String = "";
 
-			if (err is Error)
-				 msg += error.getStackTrace();
-			else if (err is ErrorEvent)
-				 msg += err.text;
-			else
+			if (err is Error) {
+				msg += err.error;
+				msg += err.getStackTrace();
+			} else if (err is ErrorEvent) {
+				msg += err.text;
+			} else {
 				 msg += err.toString();
+			}
 
 			error(msg, true);
 		}
