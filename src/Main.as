@@ -74,7 +74,6 @@ package
 		private var pngPrefix:String = "";
 		private var subPrefix:String = "";
 		private var usePowerOfTwo:Boolean = false;
-		private var useDither:Boolean = false;
 		private var colorBits:uint = 8;
 		private var verbose:Boolean = false;
 		private var dimW:uint, dimH:uint;
@@ -83,6 +82,7 @@ package
 		private var extrude:uint = 0;
 		private var hasGUI:Boolean = false;
 		private var pngEncoder:uint = ENC_PNGENCODER_AS;
+		private var quantizer:uint = QUANT_FLOYD_STEINBERG;
 
 		// files and lists
 		private var outFile:File = null;
@@ -127,6 +127,17 @@ package
 			"ENC_PNGENCODER2_GOOD"
 		]);
 
+		// encoders
+		private static const QUANT_RAW:uint = 0;
+		private static const QUANT_FLOYD_STEINBERG:uint = 1;
+		private static const QUANT_NOISE_SHAPING:uint = 2;
+
+		private static const QUANT_LIST:Vector.<String> = Vector.<String>([
+			"QUANT_RAW",
+			"QUANT_FLOYD_STEINBERG",
+			"QUANT_NOISE_SHAPING"
+		]);
+
 		// version and title
 		private static const VERSION:String = "1.4";
 		private static const TITLE:String = "ta-gen v" + VERSION;
@@ -159,7 +170,8 @@ adl <app-xml> -- arguments
 	-padding <padding-between-images> (def: 1)
 	-poweroftwo: end dimensions will be a power of 2 square
 	-colorbits <1-8> (def. 8): less than 8 means quantization
-	-dither: apply dithering for colorbits less than 8
+	-quantizer <0-2> (def. 1): see -listquantizers
+	-listquantizers: dump the quantizer list
 	-extrude <pixels> (def. 0): extrude the edges of each image
 	-gui: enable a simple user interface
 	-pngencoder <0-5> (def: 0): see -listpngencoders
@@ -208,7 +220,12 @@ adl <app-xml> -- arguments
 					return;
 				} else if (args[0] == "-listpngencoders") {
 					verbose = true;
-					log(listPNGEncoders());
+					log(enumerateList(ENC_LIST));
+					exit();
+					return;
+				} else if (args[0] == "-listquantizers") {
+					verbose = true;
+					log(enumerateList(QUANT_LIST));
 					exit();
 					return;
 				}
@@ -219,9 +236,6 @@ adl <app-xml> -- arguments
 					if (carg == "-poweroftwo") {
 						usePowerOfTwo = true;
 						log("* argument -poweroftwo");
-					} else if (carg == "-dither") {
-						useDither = true;
-						log("* argument -dither");
 					} else if (carg == "-gui") {
 						hasGUI = true;
 						createGUI();
@@ -272,9 +286,14 @@ adl <app-xml> -- arguments
 						log("* argument -extrude: " + extrude);
 					} else if (carg == "-pngencoder") {
 						pngEncoder = uint(narg);
-						if (pngEncoder > 5)
+						if (pngEncoder > ENC_LIST.length - 1)
 							pngEncoder = ENC_PNGENCODER_AS;
 						log("* argument -pngencoder: " + ENC_LIST[pngEncoder]);
+					} else if (carg == "-pngencoder") {
+						quantizer = uint(narg);
+						if (quantizer > QUANT_LIST.length - 1)
+							quantizer = QUANT_FLOYD_STEINBERG;
+						log("* argument -quantizer: " + QUANT_LIST[quantizer]);
 					}
 				}
 
@@ -632,14 +651,7 @@ adl <app-xml> -- arguments
 				bmd = new BitmapData(dimW, dimW, true, 0x0);
 				bmd.draw(cont);
 
-				const levels:uint = BitmapDataQuantize.bitsToLevels(colorBits);
-				if (useDither) {
-					log("* quantizing with floyd-steinberg...");
-					BitmapDataQuantize.quantizeFloydSteinberg(bmd, levels);
-				} else {
-					log("* quantizing...");
-					BitmapDataQuantize.quantize(bmd, levels);
-				}
+				quantize(bmd);
 
 				const back:BitmapData = new BitmapData(dimW, dimW, isTransparent, background);
 				back.copyPixels(bmd, back.rect, new Point(0, 0), null, null, true);
@@ -744,14 +756,35 @@ adl <app-xml> -- arguments
 			return ba;
 		}
 
-		// list the PNG encoders
-		private function listPNGEncoders():String
+		// quantize bitmap data
+		private function quantize(_bmd:BitmapData):void
+		{
+			const levels:uint = BitmapDataQuantize.bitsToLevels(colorBits);
+
+			switch (quantizer) {
+			case QUANT_RAW:
+				log("* quantizing...");
+				BitmapDataQuantize.quantize(_bmd, levels);
+				break;
+			case QUANT_FLOYD_STEINBERG:
+				log("* quantizing with floyd-steinberg...");
+				BitmapDataQuantize.quantizeFloydSteinberg(_bmd, levels);
+				break;
+			case QUANT_NOISE_SHAPING:
+				log("* quantizing with noise-shaping...");
+				error("not implemented!");
+				break;
+			}
+		}
+
+		// for a list out off an input Vector.<String>
+		private function enumerateList(_vec:Vector.<String>):String
 		{
 			var str:String = "";
-			const len:uint = ENC_LIST.length;
+			const len:uint = _vec.length;
 
 			for (var i:uint = 0; i < len; i++)
-				str += "\n" + i.toString() + ": " + ENC_LIST[i];
+				str += "\n" + i.toString() + ": " + _vec[i];
 
 			return str;
 		}
