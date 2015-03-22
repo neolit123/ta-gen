@@ -85,8 +85,7 @@ package neolit123.utils
 		 *
 		 * NOTES:
 		 * - we do not apply the FS kernel to the alpha channel!
-		 * - fast [0, 255] clamp from here:
-		 * http://codereview.stackexchange.com/questions/6502/fastest-way-to-clamp-an-integer-to-the-range-0-255
+		 *
 		 */
 		public static function quantizeFloydSteinberg(_bmd:BitmapData, _levels:uint):void
 		{
@@ -136,10 +135,10 @@ package neolit123.utils
 				b = c & 0xFF;
 
 				// normalize each channel
-				na = uint(a * inv255Levels + 0.5) * norm;
-				nr = uint(r * inv255Levels + 0.5) * norm;
-				ng = uint(g * inv255Levels + 0.5) * norm;
-				nb = uint(b * inv255Levels + 0.5) * norm;
+				na = int(a * inv255Levels + 0.5) * norm;
+				nr = int(r * inv255Levels + 0.5) * norm;
+				ng = int(g * inv255Levels + 0.5) * norm;
+				nb = int(b * inv255Levels + 0.5) * norm;
 
 				// update current pixel
 				pix[i] = na << 24 | nr << 16 | ng << 8 | nb;
@@ -153,68 +152,72 @@ package neolit123.utils
 
 				// +1, 0
 				idx = i + 1;
-				if (idx < len1) {
-					c = pix[idx];
-					a = c >> 24 & 0xFF;
-					r = (c >> 16 & 0xFF) + d1 * er;
-					g = (c >> 8 & 0xFF) + d1 * eg;
-					b = (c & 0xFF) + d1 * eb;
+				if (idx > len1)
+					continue;
 
-					// clamp the r, g, b values to [0, 255]
-					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
-					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
-					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
+				c = pix[idx];
+				a = c >> 24 & 0xFF;
+				r = (c >> 16 & 0xFF) + d1 * er;
+				g = (c >> 8 & 0xFF) + d1 * eg;
+				b = (c & 0xFF) + d1 * eb;
 
-					pix[idx] = a << 24 | r << 16 | g << 8 | b;
-				}
+				// clamp the r, g, b values to [0, 255]
+				r = (r & ~(r >> 31)) - 255; r = (r & (r >> 31)) + 255;
+				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
+				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
+
+				pix[idx] = a << 24 | r << 16 | g << 8 | b;
 
 				// -1, +1
 				idx = (y + 1) * w + x - 1;
-				if (idx < len1 && idx > -1) {
-					c = pix[idx];
-					a = c >> 24 & 0xFF;
-					r = (c >> 16 & 0xFF) + d2 * er;
-					g = (c >> 8 & 0xFF) + d2 * eg;
-					b = (c & 0xFF) + d2 * eb;
+				if (idx > len1)
+					continue;
 
-					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
-					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
-					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
+				c = pix[idx];
+				a = c >> 24 & 0xFF;
+				r = (c >> 16 & 0xFF) + d2 * er;
+				g = (c >> 8 & 0xFF) + d2 * eg;
+				b = (c & 0xFF) + d2 * eb;
 
-					pix[idx] = a << 24 | r << 16 | g << 8 | b;
-				}
+				r = (r & ~(r >> 31)) - 255; r = (r & (r >> 31)) + 255;
+				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
+				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
+
+				pix[idx] = a << 24 | r << 16 | g << 8 | b;
 
 				// 0, +1
 				idx = (y + 1) * w + x;
-				if (idx < len1 && idx > -1) {
-					c = pix[idx];
-					a = c >> 24 & 0xFF;
-					r = (c >> 16 & 0xFF) + d3 * er;
-					g = (c >> 8 & 0xFF) + d3 * eg;
-					b = (c & 0xFF) + d3 * eb;
+				if (idx > len1)
+					continue;
 
-					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
-					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
-					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
+				c = pix[idx];
+				a = c >> 24 & 0xFF;
+				r = (c >> 16 & 0xFF) + d3 * er;
+				g = (c >> 8 & 0xFF) + d3 * eg;
+				b = (c & 0xFF) + d3 * eb;
 
-					pix[idx] = a << 24 | r << 16 | g << 8 | b;
-				}
+				r = (r & ~(r >> 31)) - 255; r = (r & (r >> 31)) + 255;
+				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
+				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
+
+				pix[idx] = a << 24 | r << 16 | g << 8 | b;
 
 				// +1, +1
 				idx = (y + 1) * w + x + 1;
-				if (idx < len1 && idx > -1) {
-					c = pix[idx];
-					a = c >> 24 & 0xFF;
-					r = (c >> 16 & 0xFF) + d4 * er;
-					g = (c >> 8 & 0xFF) + d4 * eg;
-					b = (c & 0xFF) + d4 * eb;
+				if (idx > len1)
+					continue;
 
-					j = 255; j -= r; j >>= 31; j |= r; r >>= 31; r = ~r; r &= j;
-					j = 255; j -= g; j >>= 31; j |= g; g >>= 31; g = ~g; g &= j;
-					j = 255; j -= b; j >>= 31; j |= b; b >>= 31; b = ~b; b &= j;
+				c = pix[idx];
+				a = c >> 24 & 0xFF;
+				r = (c >> 16 & 0xFF) + d4 * er;
+				g = (c >> 8 & 0xFF) + d4 * eg;
+				b = (c & 0xFF) + d4 * eb;
 
-					pix[idx] = a << 24 | r << 16 | g << 8 | b;
-				}
+				r = (r & ~(r >> 31)) - 255; r = (r & (r >> 31)) + 255;
+				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
+				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
+
+				pix[idx] = a << 24 | r << 16 | g << 8 | b;
 			}
 
 			// update the BitmapData from the Vector
