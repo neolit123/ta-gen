@@ -152,7 +152,7 @@ package neolit123.utils
 
 				// +1, 0
 				idx = i + 1;
-				if (idx > len1)
+				if (idx & ~len1)
 					continue;
 
 				c = pix[idx];
@@ -170,7 +170,7 @@ package neolit123.utils
 
 				// -1, +1
 				idx = (y + 1) * w + x - 1;
-				if (idx > len1)
+				if (idx & ~len1)
 					continue;
 
 				c = pix[idx];
@@ -187,7 +187,7 @@ package neolit123.utils
 
 				// 0, +1
 				idx = (y + 1) * w + x;
-				if (idx > len1)
+				if (idx & ~len1)
 					continue;
 
 				c = pix[idx];
@@ -204,7 +204,7 @@ package neolit123.utils
 
 				// +1, +1
 				idx = (y + 1) * w + x + 1;
-				if (idx > len1)
+				if (idx & ~len1)
 					continue;
 
 				c = pix[idx];
