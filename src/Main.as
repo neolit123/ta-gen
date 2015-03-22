@@ -74,7 +74,7 @@ package
 		private var pngPrefix:String = "";
 		private var subPrefix:String = "";
 		private var usePowerOfTwo:Boolean = false;
-		private var colorBits:uint = 8;
+		private var colorBits:Vector.<uint> = Vector.<uint>([8,8,8,8]);
 		private var verbose:Boolean = false;
 		private var dimW:uint, dimH:uint;
 		private var dimError:Boolean = false;
@@ -169,7 +169,7 @@ adl <app-xml> -- arguments
 	-background <0xAARRGGBB> (def. 0x0)
 	-padding <padding-between-images> (def: 1)
 	-poweroftwo: end dimensions will be a power of 2 square
-	-colorbits <1-8> (def. 8): less than 8 means quantization
+	-colorbits <ARGB> (def. 8888): less than 8 per channel means quantization
 	-quantizer <0-2> (def. 1): see -listquantizers
 	-listquantizers: dump the quantizer list
 	-extrude <pixels> (def. 0): extrude the edges of each image
@@ -199,7 +199,7 @@ adl <app-xml> -- arguments
 		// called each time the app starts
 		public function invokeEventHandler(_e:InvokeEvent):void
 		{
-			var i:int;
+			var i:uint, j:uint;
 			args = _e.arguments;
 			currentDir = _e.currentDirectory;
 
@@ -253,8 +253,6 @@ adl <app-xml> -- arguments
 
 					var iPrev:int = i; // store current index
 
-
-
 					if (i < len - 1) { // bellow are two-part arguments
 
 						const narg:String = args[i + 1];
@@ -302,9 +300,19 @@ adl <app-xml> -- arguments
 							ignore.push(ignorePath);
 							i++;
 						} else if (carg == "-colorbits") {
-							colorBits = uint(narg);
-							colorBits < 1 ? 1 : (colorBits > 8 ? 8 : colorBits);
-							logArgument(carg, colorBits);
+							if (narg.length == 4) {
+								for (j = 0; j < 4; j++) {
+									var colorBitTemp:uint = uint(narg.charAt[j]);
+									if (colorBitTemp > 8) {
+										warning("bad value for " + carg);
+										colorBitTemp = 8;
+									}
+									colorBits[j] = colorBitTemp;
+								}
+							} else {
+								warning("bad value for " + carg);
+							}
+							logArgument(carg, colorBits.join(""));
 							i++;
 						} else if (carg == "-extrude") {
 							extrude = uint(narg);
@@ -684,7 +692,7 @@ adl <app-xml> -- arguments
 			const isTransparent:Boolean = !((background >>> 24) == 0xFF);
 
 			// quantize
-			if (colorBits < 8) {
+			if (colorBits[0] + colorBits[1] + colorBits[2] + colorBits[3] < 32) {
 				bmd = new BitmapData(dimW, dimW, true, 0x0);
 				bmd.draw(cont);
 
@@ -796,16 +804,14 @@ adl <app-xml> -- arguments
 		// quantize bitmap data
 		private function quantize(_bmd:BitmapData):void
 		{
-			const levels:uint = BitmapDataQuantize.bitsToLevels(colorBits);
-
 			switch (quantizer) {
 			case QUANT_RAW:
 				log("* quantizing...");
-				BitmapDataQuantize.quantize(_bmd, levels);
+				// BitmapDataQuantize.quantize(_bmd, colorBits);
 				break;
 			case QUANT_FLOYD_STEINBERG:
 				log("* quantizing with floyd-steinberg...");
-				BitmapDataQuantize.quantizeFloydSteinberg(_bmd, levels);
+				// BitmapDataQuantize.quantizeFloydSteinberg(_bmd, colorBits);
 				break;
 			case QUANT_NOISE_SHAPING:
 				log("* quantizing with noise-shaping...");
