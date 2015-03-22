@@ -135,10 +135,10 @@ package neolit123.utils
 				b = c & 0xFF;
 
 				// normalize each channel
-				na = int(a * inv255Levels + 0.5) * norm;
-				nr = int(r * inv255Levels + 0.5) * norm;
-				ng = int(g * inv255Levels + 0.5) * norm;
-				nb = int(b * inv255Levels + 0.5) * norm;
+				na = uint(a * inv255Levels + 0.5) * norm;
+				nr = uint(r * inv255Levels + 0.5) * norm;
+				ng = uint(g * inv255Levels + 0.5) * norm;
+				nb = uint(b * inv255Levels + 0.5) * norm;
 
 				// update current pixel
 				pix[i] = na << 24 | nr << 16 | ng << 8 | nb;
