@@ -62,7 +62,7 @@ package neolit123.utils
 			if (!_bmd)
 				throw Error(prefix + "source BitmapData cannot be null!");
 
-			if (_channelBits || _channelBits.length != 4)
+			if (!_channelBits || _channelBits.length != 4)
 				throw Error(prefix + "bad channel bits vector!");
 
 			const len:uint = _channelBits.length;
