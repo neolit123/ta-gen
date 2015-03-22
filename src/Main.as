@@ -302,15 +302,15 @@ adl <app-xml> -- arguments
 						} else if (carg == "-channelbits") {
 							if (narg.length == 4) {
 								for (j = 0; j < 4; j++) {
-									var channelBitTemp:uint = uint(narg.charAt[j]);
+									var channelBitTemp:uint = uint(narg.charAt(j));
 									if (channelBitTemp > 8) {
-										warning("bad value for " + carg);
+										warning("bad value for " + carg + " at index " + j + " [" + channelBitTemp + "]. setting it to 8.");
 										channelBitTemp = 8;
 									}
 									channelBits[j] = channelBitTemp;
 								}
 							} else {
-								warning("bad value for " + carg);
+								warning("bad number of digits for " + carg + ". setting it to 8888.");
 							}
 							logArgument(carg, channelBits.join(""));
 							i++;
