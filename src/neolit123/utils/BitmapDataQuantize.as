@@ -263,5 +263,80 @@ package neolit123.utils
 			// update the BitmapData from the Vector
 			_bmd.setVector(_bmd.rect, pix);
 		}
+
+		/* a simple but efficient noise shaping dither
+		 */
+		public static function quantizeNoiseShaping(_bmd:BitmapData, _channelBits:Vector.<uint>):void
+		{
+			// error checking
+			checkQuantizeInput("quantizeNoiseShaping", _bmd, _channelBits);
+
+			// normalize levels
+			const levelsA:uint = bitsToLevels(_channelBits[CH_BIT_A]);
+			const levelsR:uint = bitsToLevels(_channelBits[CH_BIT_R]);
+			const levelsG:uint = bitsToLevels(_channelBits[CH_BIT_G]);
+			const levelsB:uint = bitsToLevels(_channelBits[CH_BIT_B]);
+
+			const normA:Number = normalizeLevels(levelsA);
+			const normR:Number = normalizeLevels(levelsR);
+			const normG:Number = normalizeLevels(levelsG);
+			const normB:Number = normalizeLevels(levelsB);
+
+			const inv255LevelsA:Number = INV_255 * levelsA;
+			const inv255LevelsR:Number = INV_255 * levelsR;
+			const inv255LevelsG:Number = INV_255 * levelsG;
+			const inv255LevelsB:Number = INV_255 * levelsB;
+
+			// some constants
+			const len:uint = _bmd.height * _bmd.width;
+
+			// write the entire BitmapData into a uint Vector
+			const pix:Vector.<uint> = _bmd.getVector(_bmd.rect);
+
+			for (var i:uint = 0; i < len; i++) {
+
+				// some clobber variables
+				var c:uint;
+				var a:int, r:int, g:int, b:int;
+				var na:uint, nr:uint, ng:uint, nb:uint;
+				var er:int, eg:int, eb:int;
+
+				// get current pixel
+				c = pix[i];
+				a = c >> 24 & 0xFF;
+				r = c >> 16 & 0xFF;
+				g = c >> 8 & 0xFF;
+				b = c & 0xFF;
+
+				var r0:Number = Math.random() * 2.0;
+				var r1:Number = Math.random() * 2.0;
+				var r2:Number = Math.random() * 2.0;
+
+				r += er * r0;
+				g += eg * r1;
+				b += eb * r2;
+
+				r = (r & ~(r >> 31)) - 255; r = (r & (r >> 31)) + 255;
+				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
+				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
+
+				// normalize each channel
+				na = uint(a * inv255LevelsA + 0.5) * normA;
+				nr = uint(r * inv255LevelsR + 0.5) * normR;
+				ng = uint(g * inv255LevelsG + 0.5) * normG;
+				nb = uint(b * inv255LevelsB + 0.5) * normB;
+
+				// update current pixel
+				pix[i] = na << 24 | nr << 16 | ng << 8 | nb;
+
+				// get quantization error
+				er = r - nr;
+				eg = g - ng;
+				eb = b - nb;
+			}
+
+			// update the BitmapData from the Vector
+			_bmd.setVector(_bmd.rect, pix);
+		}
 	}
 }

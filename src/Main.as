@@ -820,7 +820,7 @@ adl <app-xml> -- arguments
 				BitmapDataQuantize.quantizeFloydSteinberg(_bmd, channelBits);
 				break;
 			case QUANT_NOISE_SHAPING:
-				error("not implemented!");
+				BitmapDataQuantize.quantizeNoiseShaping(_bmd, channelBits);
 				break;
 			}
 		}
