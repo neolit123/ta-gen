@@ -28,6 +28,11 @@ package neolit123.utils
 
 	public class BitmapDataQuantize
 	{
+		private static const CH_BIT_A:uint = 0;
+		private static const CH_BIT_R:uint = 1;
+		private static const CH_BIT_G:uint = 2;
+		private static const CH_BIT_B:uint = 3;
+
 		private static const rVal:Array = new Array(256);
 		private static const gVal:Array = new Array(256);
 		private static const bVal:Array = new Array(256);
@@ -53,26 +58,54 @@ package neolit123.utils
 			return (1 << _bits) - 1;
 		}
 
+		private static function checkQuantizeInput(_fName:String, _bmd:BitmapData, _channelBits:Vector.<uint>):void
+		{
+			const prefix:String = "BitmapDataQuantize::" + _fName + ": ";
+			if (!_bmd)
+				throw Error(prefix + "source BitmapData cannot be null!");
+
+			if (_channelBits || _channelBits.length != 4)
+				throw Error(prefix + "bad channel bits vector!");
+
+			const len:uint = _channelBits.length;
+			for (var i:uint = 0; i < len; i++) {
+				if (_channelBits[i] > 8)
+					throw Error(prefix + "channel bits at index " + i + " are more than 8");
+			}
+		}
+
 		// raw quantization / posterization
-		public static function quantize(_bmd:BitmapData, _levels:uint):void
+		public static function quantize(_bmd:BitmapData, _channelBits:Vector.<uint>):void
 		{
 			// error checking
-			if (!_bmd)
-				throw Error("BitmapDataQuantize::quantize(): source cannot be null!");
-			if (!_levels)
-				throw Error("BitmapDataQuantize::quantize(): levels cannot be zero!");
+			checkQuantizeInput("quantize", _bmd, _channelBits);
 
 			// normalize levels
-			const norm:Number = normalizeLevels(_levels, 255);
-			const inv255Levels:Number = INV_255 * _levels;
+			const levelsA:uint = bitsToLevels(_channelBits[CH_BIT_A]);
+			const levelsR:uint = bitsToLevels(_channelBits[CH_BIT_R]);
+			const levelsG:uint = bitsToLevels(_channelBits[CH_BIT_G]);
+			const levelsB:uint = bitsToLevels(_channelBits[CH_BIT_B]);
+
+			const normA:Number = normalizeLevels(levelsA, 255);
+			const normR:Number = normalizeLevels(levelsR, 255);
+			const normG:Number = normalizeLevels(levelsG, 255);
+			const normB:Number = normalizeLevels(levelsB, 255);
+
+			const inv255LevelsA:Number = INV_255 * levelsA;
+			const inv255LevelsR:Number = INV_255 * levelsR;
+			const inv255LevelsG:Number = INV_255 * levelsG;
+			const inv255LevelsB:Number = INV_255 * levelsB;
 
 			// create pallete
 			for (var i:uint = 0; i < 256; i++) {
-				const v:uint = uint(i * inv255Levels + 0.5) * norm;
-				aVal[i] = v << 24;
-				rVal[i] = v << 16;
-				gVal[i] = v << 8;
-				bVal[i] = v;
+				const vA:uint = uint(i * inv255LevelsA + 0.5) * normA;
+				const vR:uint = uint(i * inv255LevelsR + 0.5) * normR;
+				const vG:uint = uint(i * inv255LevelsG + 0.5) * normG;
+				const vB:uint = uint(i * inv255LevelsB + 0.5) * normB;
+				aVal[i] = vA << 24;
+				rVal[i] = vR << 16;
+				gVal[i] = vG << 8;
+				bVal[i] = vB;
 			}
 
 			// posterize
@@ -87,16 +120,26 @@ package neolit123.utils
 		 * - we do not apply the FS kernel to the alpha channel!
 		 *
 		 */
-		public static function quantizeFloydSteinberg(_bmd:BitmapData, _levels:uint):void
+		public static function quantizeFloydSteinberg(_bmd:BitmapData, _channelBits:Vector.<uint>):void
 		{
 			// error checking
-			if (!_bmd)
-				throw Error("BitmapDataQuantize::quantizeFloydSteinberg(): source cannot be null!");
-			if (!_levels)
-				throw Error("BitmapDataQuantize::quantizeFloydSteinberg(): levels cannot be zero!");
+			checkQuantizeInput("quantizeFloydSteinberg", _bmd, _channelBits);
 
 			// normalize levels
-			const norm:Number = normalizeLevels(_levels, 255);
+			const levelsA:uint = bitsToLevels(_channelBits[CH_BIT_A]);
+			const levelsR:uint = bitsToLevels(_channelBits[CH_BIT_R]);
+			const levelsG:uint = bitsToLevels(_channelBits[CH_BIT_G]);
+			const levelsB:uint = bitsToLevels(_channelBits[CH_BIT_B]);
+
+			const normA:Number = normalizeLevels(levelsA, 255);
+			const normR:Number = normalizeLevels(levelsR, 255);
+			const normG:Number = normalizeLevels(levelsG, 255);
+			const normB:Number = normalizeLevels(levelsB, 255);
+
+			const inv255LevelsA:Number = INV_255 * levelsA;
+			const inv255LevelsR:Number = INV_255 * levelsR;
+			const inv255LevelsG:Number = INV_255 * levelsG;
+			const inv255LevelsB:Number = INV_255 * levelsB;
 
 			// the kernel
 			const d1:Number = 0.4375; // 7.0 / 16.0
@@ -109,7 +152,6 @@ package neolit123.utils
 			const w:uint = _bmd.width;
 			const len:uint = w * h;
 			const len1:uint = len - 1;
-			const inv255Levels:Number = INV_255 * _levels;
 
 			// write the entire BitmapData into a uint Vector
 			const pix:Vector.<uint> = _bmd.getVector(_bmd.rect);
@@ -135,10 +177,10 @@ package neolit123.utils
 				b = c & 0xFF;
 
 				// normalize each channel
-				na = uint(a * inv255Levels + 0.5) * norm;
-				nr = uint(r * inv255Levels + 0.5) * norm;
-				ng = uint(g * inv255Levels + 0.5) * norm;
-				nb = uint(b * inv255Levels + 0.5) * norm;
+				na = uint(a * inv255LevelsA + 0.5) * normA;
+				nr = uint(r * inv255LevelsR + 0.5) * normR;
+				ng = uint(g * inv255LevelsG + 0.5) * normG;
+				nb = uint(b * inv255LevelsB + 0.5) * normB;
 
 				// update current pixel
 				pix[i] = na << 24 | nr << 16 | ng << 8 | nb;
