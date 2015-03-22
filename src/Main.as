@@ -128,12 +128,12 @@ package
 		]);
 
 		// encoders
-		private static const QUANT_RAW:uint = 0;
+		private static const QUANT_POSTERIZE_FAST:uint = 0;
 		private static const QUANT_FLOYD_STEINBERG:uint = 1;
 		private static const QUANT_NOISE_SHAPING:uint = 2;
 
 		private static const QUANT_LIST:Vector.<String> = Vector.<String>([
-			"QUANT_RAW",
+			"QUANT_POSTERIZE_FAST",
 			"QUANT_FLOYD_STEINBERG",
 			"QUANT_NOISE_SHAPING"
 		]);
@@ -809,7 +809,7 @@ adl <app-xml> -- arguments
 			log("* quantizing with " + QUANT_LIST[quantizer]);
 
 			switch (quantizer) {
-			case QUANT_RAW:
+			case QUANT_POSTERIZE_FAST:
 				BitmapDataQuantize.quantize(_bmd, channelBits);
 				break;
 			case QUANT_FLOYD_STEINBERG:
