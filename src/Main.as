@@ -175,7 +175,7 @@ adl <app-xml> -- arguments
 	-extrude <pixels> (def. 0): extrude the edges of each image
 	-gui: enable a simple user interface
 	-pngencoder <0-5> (def: 0): see -listpngencoders
-	-listpngencoders: dump the png encoder list
+	-listpngencoders: dump the PNG encoder list
 	-verbose: detailed output
 	-help: this screen
 ]]>;
