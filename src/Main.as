@@ -204,97 +204,129 @@ adl <app-xml> -- arguments
 			currentDir = _e.currentDirectory;
 
 			// parse command line
+
 			if (args.length) {
-				var vidx:int = args.indexOf("-verbose");
-				if (vidx != -1)
+				if (args.indexOf("-verbose") != -1)
 					verbose = true;
 
 				// show title
 				log(TITLE);
 
 				// help
-				if (args[0] == "-help") {
+				if (args.indexOf("-help") != -1) {
 					verbose = true;
 					log(HELP_TEXT);
 					exit();
 					return;
-				} else if (args[0] == "-listpngencoders") {
+				} else if (args.indexOf("-listpngencoders") != -1) {
 					verbose = true;
 					log(enumerateList(ENC_LIST));
 					exit();
 					return;
-				} else if (args[0] == "-listquantizers") {
+				} else if (args.indexOf("-listquantizers") != -1) {
 					verbose = true;
 					log(enumerateList(QUANT_LIST));
 					exit();
 					return;
 				}
+
 				const len:int = args.length;
+
 				for (i = 0; i < len; i++) {
+
 					const carg:String = args[i];
+
 					// one part arguments
 					if (carg == "-poweroftwo") {
 						usePowerOfTwo = true;
-						log("* argument -poweroftwo");
+						logArgument(carg);
+						continue;
 					} else if (carg == "-gui") {
 						hasGUI = true;
 						createGUI();
-						log("* argument -gui");
+						logArgument(carg);
+						continue;
+					} else if (carg == "-verbose") {
+						logArgument(carg);
+						continue; // already handled
 					}
-					if (i == len - 1) // bellow are two-part arguments
-						break;
-					const narg:String = args[i + 1];
-					if (carg == "-in") {
-						folder = currentDir.resolvePath(narg);
-						log("* argument -in: " + folder.nativePath);
-						if (!folder.exists || !folder.isDirectory) {
-							error("input path not a directory or does not exist");
-							return;
+
+					var iPrev:int = i; // store current index
+
+
+
+					if (i < len - 1) { // bellow are two-part arguments
+
+						const narg:String = args[i + 1];
+
+						if (carg == "-in") {
+							folder = currentDir.resolvePath(narg);
+							i++;
+							logArgument(carg, folder.nativePath);
+							if (!folder.exists || !folder.isDirectory) {
+								error("input path not a directory or does not exist", true);
+								return;
+							}
+							folders.push(folder);
+						} else if (carg == "-out") {
+							outFile = currentDir.resolvePath(narg);
+							logArgument(carg, outFile.nativePath);
+							i++;
+						} else if (carg == "-pngprefix") {
+							pngPrefix = narg;
+							logArgument(carg, pngPrefix);
+							i++;
+						} else if (carg == "-subprefix") {
+							subPrefix = narg;
+							logArgument(carg, subPrefix);
+							i++;
+						} else if (carg == "-mindim") {
+							minDim = uint(narg);
+							logArgument(carg, minDim);
+							i++;
+						} else if (carg == "-maxdim") {
+							maxDim = uint(narg);
+							logArgument(carg, maxDim);
+							i++;
+						} else if (carg == "-background") {
+							background = uint(narg);
+							logArgument(carg, background.toString(16).toUpperCase());
+							i++;
+						} else if (carg == "-padding") {
+							padding = uint(narg);
+							logArgument(carg, padding);
+							i++;
+						} else if (carg == "-ignore") {
+							const ignorePath:File = currentDir.resolvePath(narg);
+							logArgument(carg, ignorePath.nativePath);
+							ignore.push(ignorePath);
+							i++;
+						} else if (carg == "-colorbits") {
+							colorBits = uint(narg);
+							colorBits < 1 ? 1 : (colorBits > 8 ? 8 : colorBits);
+							logArgument(carg, colorBits);
+							i++;
+						} else if (carg == "-extrude") {
+							extrude = uint(narg);
+							logArgument(carg, extrude);
+							i++;
+						} else if (carg == "-pngencoder") {
+							pngEncoder = uint(narg);
+							if (pngEncoder > ENC_LIST.length - 1)
+								pngEncoder = ENC_PNGENCODER_AS;
+							logArgument(carg, ENC_LIST[pngEncoder]);
+							i++;
+						} else if (carg == "-pngencoder") {
+							quantizer = uint(narg);
+							if (quantizer > QUANT_LIST.length - 1)
+								quantizer = QUANT_FLOYD_STEINBERG;
+							logArgument(carg, QUANT_LIST[quantizer]);
+							i++;
 						}
-						folders.push(folder);
-					} else if (carg == "-out") {
-						outFile = currentDir.resolvePath(narg);
-						log("* argument -out: " + outFile.nativePath);
-					} else if (carg == "-pngprefix") {
-						pngPrefix = args[i + 1];
-						log("* argument -pngprefix: " + pngPrefix);
-					} else if (carg == "-subprefix") {
-						subPrefix = narg;
-						log("* argument -subprefix: " + subPrefix);
-					} else if (carg == "-mindim") {
-						minDim = uint(narg);
-						log("* argument -mindim: " + minDim);
-					} else if (carg == "-maxdim") {
-						maxDim = uint(narg);
-						log("* argument -maxdim: " + maxDim);
-					} else if (carg == "-background") {
-						background = uint(narg);
-						log("* argument -background: " + narg);
-					} else if (carg == "-padding") {
-						padding = uint(narg);
-						log("* argument -padding: " + padding);
-					} else if (carg == "-ignore") {
-						const ignorePath:File = currentDir.resolvePath(narg);
-						log("* argument -ignore: " + ignorePath.nativePath);
-						ignore.push(ignorePath);
-					} else if (carg == "-colorbits") {
-						colorBits = uint(narg);
-						colorBits < 1 ? 1 : (colorBits > 8 ? 8 : colorBits);
-						log("* argument -colorbits: " + colorBits);
-					} else if (carg == "-extrude") {
-						extrude = uint(narg);
-						log("* argument -extrude: " + extrude);
-					} else if (carg == "-pngencoder") {
-						pngEncoder = uint(narg);
-						if (pngEncoder > ENC_LIST.length - 1)
-							pngEncoder = ENC_PNGENCODER_AS;
-						log("* argument -pngencoder: " + ENC_LIST[pngEncoder]);
-					} else if (carg == "-pngencoder") {
-						quantizer = uint(narg);
-						if (quantizer > QUANT_LIST.length - 1)
-							quantizer = QUANT_FLOYD_STEINBERG;
-						log("* argument -quantizer: " + QUANT_LIST[quantizer]);
 					}
+
+					if (i == iPrev) // the index has not updated the current argument is unknown
+						warning("unknown argument '" + carg + "'");
 				}
 
 				if (!minDim || !maxDim) {
@@ -319,7 +351,7 @@ adl <app-xml> -- arguments
 				}
 
 				if (!hasGUI && !outFile)
-					error("output PNG not set", true);
+					error("missing output", true);
 
 				if (folders.length) {
 					for (i = 0; i < folders.length; i++)
@@ -342,6 +374,11 @@ adl <app-xml> -- arguments
 				folder.addEventListener(Event.SELECT, browseSelectHandler);
 				folder.browseForDirectory("Select folder");
 			}
+		}
+
+		private function logArgument(_arg:String, _val:* = null):void
+		{
+			log("* argument " + _arg + (_val ? (": " + _val.toString()) : ""));
 		}
 
 		private function createGUI():void
@@ -436,7 +473,7 @@ adl <app-xml> -- arguments
 				urlRequest.url = files[0];
 				startTime = getTimer();
 				log("* loading " + files.length + " files...");
-				log("* each image will be extruded by " + extrude + " pixels");
+				warning("each image will be extruded by " + extrude + " pixels");
 				loader.load(urlRequest);
 			} else {
 				error("nothing to load!");
