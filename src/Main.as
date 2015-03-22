@@ -74,7 +74,7 @@ package
 		private var pngPrefix:String = "";
 		private var subPrefix:String = "";
 		private var usePowerOfTwo:Boolean = false;
-		private var colorBits:Vector.<uint> = Vector.<uint>([8,8,8,8]);
+		private var channelBits:Vector.<uint> = Vector.<uint>([8, 8, 8, 8]);
 		private var verbose:Boolean = false;
 		private var dimW:uint, dimH:uint;
 		private var dimError:Boolean = false;
@@ -299,20 +299,20 @@ adl <app-xml> -- arguments
 							logArgument(carg, ignorePath.nativePath);
 							ignore.push(ignorePath);
 							i++;
-						} else if (carg == "-colorbits") {
+						} else if (carg == "-channelbits") {
 							if (narg.length == 4) {
 								for (j = 0; j < 4; j++) {
-									var colorBitTemp:uint = uint(narg.charAt[j]);
-									if (colorBitTemp > 8) {
+									var channelBitTemp:uint = uint(narg.charAt[j]);
+									if (channelBitTemp > 8) {
 										warning("bad value for " + carg);
-										colorBitTemp = 8;
+										channelBitTemp = 8;
 									}
-									colorBits[j] = colorBitTemp;
+									channelBits[j] = channelBitTemp;
 								}
 							} else {
 								warning("bad value for " + carg);
 							}
-							logArgument(carg, colorBits.join(""));
+							logArgument(carg, channelBits.join(""));
 							i++;
 						} else if (carg == "-extrude") {
 							extrude = uint(narg);
@@ -692,7 +692,7 @@ adl <app-xml> -- arguments
 			const isTransparent:Boolean = !((background >>> 24) == 0xFF);
 
 			// quantize
-			if (colorBits[0] + colorBits[1] + colorBits[2] + colorBits[3] < 32) {
+			if (channelBits[0] + channelBits[1] + channelBits[2] + channelBits[3] < 32) {
 				bmd = new BitmapData(dimW, dimW, true, 0x0);
 				bmd.draw(cont);
 
@@ -807,11 +807,11 @@ adl <app-xml> -- arguments
 			switch (quantizer) {
 			case QUANT_RAW:
 				log("* quantizing...");
-				// BitmapDataQuantize.quantize(_bmd, colorBits);
+				// BitmapDataQuantize.quantize(_bmd, channelBits);
 				break;
 			case QUANT_FLOYD_STEINBERG:
 				log("* quantizing with floyd-steinberg...");
-				// BitmapDataQuantize.quantizeFloydSteinberg(_bmd, colorBits);
+				// BitmapDataQuantize.quantizeFloydSteinberg(_bmd, channelBits);
 				break;
 			case QUANT_NOISE_SHAPING:
 				log("* quantizing with noise-shaping...");
