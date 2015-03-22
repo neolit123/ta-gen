@@ -804,17 +804,16 @@ adl <app-xml> -- arguments
 		// quantize bitmap data
 		private function quantize(_bmd:BitmapData):void
 		{
+			log("* quantizing with " + QUANT_LIST[quantizer]);
+
 			switch (quantizer) {
 			case QUANT_RAW:
-				log("* quantizing...");
-				// BitmapDataQuantize.quantize(_bmd, channelBits);
+				BitmapDataQuantize.quantize(_bmd, channelBits);
 				break;
 			case QUANT_FLOYD_STEINBERG:
-				log("* quantizing with floyd-steinberg...");
-				// BitmapDataQuantize.quantizeFloydSteinberg(_bmd, channelBits);
+				BitmapDataQuantize.quantizeFloydSteinberg(_bmd, channelBits);
 				break;
 			case QUANT_NOISE_SHAPING:
-				log("* quantizing with noise-shaping...");
 				error("not implemented!");
 				break;
 			}
