@@ -320,14 +320,18 @@ adl <app-xml> -- arguments
 							i++;
 						} else if (carg == "-pngencoder") {
 							pngEncoder = uint(narg);
-							if (pngEncoder > ENC_LIST.length - 1)
+							if (pngEncoder > ENC_LIST.length - 1) {
+								warning("bad PNG encoder. setting the default one.");
 								pngEncoder = ENC_PNGENCODER_AS;
+							}
 							logArgument(carg, ENC_LIST[pngEncoder]);
 							i++;
-						} else if (carg == "-pngencoder") {
+						} else if (carg == "-quantizer") {
 							quantizer = uint(narg);
-							if (quantizer > QUANT_LIST.length - 1)
+							if (quantizer > QUANT_LIST.length - 1) {
+								warning("bad quantizer. setting the default one.");
 								quantizer = QUANT_FLOYD_STEINBERG;
+							}
 							logArgument(carg, QUANT_LIST[quantizer]);
 							i++;
 						}
