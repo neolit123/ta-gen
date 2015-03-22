@@ -121,7 +121,7 @@ package neolit123.utils
 				const y:uint = i / w;
 
 				// some clobber variables
-				var idx:int, j:int;
+				var idx:uint;
 				var c:uint;
 				var a:int, r:int, g:int, b:int;
 				var na:uint, nr:uint, ng:uint, nb:uint;
