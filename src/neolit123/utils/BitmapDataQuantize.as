@@ -84,10 +84,10 @@ package neolit123.utils
 			const levelsG:uint = bitsToLevels(_channelBits[CH_BIT_G]);
 			const levelsB:uint = bitsToLevels(_channelBits[CH_BIT_B]);
 
-			const normA:Number = normalizeLevels(levelsA, 255);
-			const normR:Number = normalizeLevels(levelsR, 255);
-			const normG:Number = normalizeLevels(levelsG, 255);
-			const normB:Number = normalizeLevels(levelsB, 255);
+			const normA:Number = normalizeLevels(levelsA);
+			const normR:Number = normalizeLevels(levelsR);
+			const normG:Number = normalizeLevels(levelsG);
+			const normB:Number = normalizeLevels(levelsB);
 
 			const inv255LevelsA:Number = INV_255 * levelsA;
 			const inv255LevelsR:Number = INV_255 * levelsR;
@@ -129,10 +129,10 @@ package neolit123.utils
 			const levelsG:uint = bitsToLevels(_channelBits[CH_BIT_G]);
 			const levelsB:uint = bitsToLevels(_channelBits[CH_BIT_B]);
 
-			const normA:Number = normalizeLevels(levelsA, 255);
-			const normR:Number = normalizeLevels(levelsR, 255);
-			const normG:Number = normalizeLevels(levelsG, 255);
-			const normB:Number = normalizeLevels(levelsB, 255);
+			const normA:Number = normalizeLevels(levelsA);
+			const normR:Number = normalizeLevels(levelsR);
+			const normG:Number = normalizeLevels(levelsG);
+			const normB:Number = normalizeLevels(levelsB);
 
 			const inv255LevelsA:Number = INV_255 * levelsA;
 			const inv255LevelsR:Number = INV_255 * levelsR;
