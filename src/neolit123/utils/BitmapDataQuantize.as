@@ -308,6 +308,9 @@ package neolit123.utils
 
 			// some constants
 			const len:uint = _bmd.height * _bmd.width;
+			const randMax:uint = 0xFFFFFFFF; // max uint
+			const invRandMax:Number = 1.0 / Number(randMax); // inverted
+			var rs:uint = Math.random() * randMax; // seed the PRNG
 
 			// write the entire BitmapData into a uint Vector
 			const pix:Vector.<uint> = _bmd.getVector(_bmd.rect);
@@ -319,6 +322,7 @@ package neolit123.utils
 				var a:int, r:int, g:int, b:int;
 				var na:uint, nr:uint, ng:uint, nb:uint;
 				var er:int, eg:int, eb:int;
+				var rn:Number;
 
 				// get current pixel
 				c = pix[i];
@@ -327,14 +331,24 @@ package neolit123.utils
 				g = c >> 8 & 0xFF;
 				b = c & 0xFF;
 
-				var r0:Number = Math.random() * 2.0;
-				var r1:Number = Math.random() * 2.0;
-				var r2:Number = Math.random() * 2.0;
+				/*
+				 * (1) a simple xor shift prng
+				 * (2) move prng value to the [0.0, 1.0] range
+				 * (3) apply the qaunt. error from feedback with weighted noise
+				 */
+				rs ^= rs << 7; rs ^= rs >> 5; rs ^= rs << 3; // (1)
+				rn = rs * invRandMax;                        // (2)
+				r += er * rn * noiseLevel[chanBitsR];        // (3)
 
-				r += er * r0;
-				g += eg * r1;
-				b += eb * r2;
+				rs ^= rs << 7; rs ^= rs >> 5; rs ^= rs << 3;
+				rn = rs * invRandMax;
+				g += eg * rn * noiseLevel[chanBitsG];
 
+				rs ^= rs << 7; rs ^= rs >> 5; rs ^= rs << 3;
+				rn = rs * invRandMax;
+				b += eb * rn * noiseLevel[chanBitsB];
+
+				// clamp the r, g, b values to [0, 255]
 				r = (r & ~(r >> 31)) - 255; r = (r & (r >> 31)) + 255;
 				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
 				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
