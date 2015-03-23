@@ -159,25 +159,25 @@ Copyright 2011-2015, Cameron Desrochers. All rights reserved.
 
 usage:
 adl <app-xml> -- arguments
-	-in <path-to-load> -in <...>
-	-out <output-png>
-	-ignore <some-path-or-file> -ignore <...> (no wildcards)
-	-pngprefix <png-name-prefix>
-	-subprefix <texture-name-prefix>
-	-mindim <minimum-pixels> (def: 32)
-	-maxdim <maximum-pixels> (def: 2048)
-	-background <0xAARRGGBB> (def. 0x0)
-	-padding <padding-between-images> (def: 1)
-	-poweroftwo: end dimensions will be a power of 2 square
-	-colorbits <ARGB> (def. 8888): less than 8 per channel means quantization
-	-quantizer <0-2> (def. 1): see -listquantizers
-	-listquantizers: dump the quantizer list
-	-extrude <pixels> (def. 0): extrude the edges of each image
-	-gui: enable a simple user interface
-	-pngencoder <0-5> (def: 0): see -listpngencoders
-	-listpngencoders: dump the PNG encoder list
-	-verbose: detailed output
-	-help: this screen
+  -in <path-to-load> -in <...>
+  -out <output-png>
+  -ignore <some-path-or-file> -ignore <...> (no wildcards)
+  -pngprefix <png-name-prefix>
+  -subprefix <texture-name-prefix>
+  -mindim <minimum-pixels> (def: 32)
+  -maxdim <maximum-pixels> (def: 2048)
+  -background <0xAARRGGBB> (def. 0x0)
+  -padding <padding-between-images> (def: 1)
+  -poweroftwo: end dimensions will be a power of 2 square
+  -colorbits <ARGB> (def. 8888): less than 8 per channel means quantization
+  -quantizer <0-2> (def. 1): see -listquantizers
+  -listquantizers: dump the quantizer list
+  -extrude <pixels> (def. 0): extrude the edges of each image
+  -gui: enable a simple user interface
+  -pngencoder <0-5> (def: 0): see -listpngencoders
+  -listpngencoders: dump the PNG encoder list
+  -verbose: detailed output
+  -help: this screen
 ]]>;
 
 		public function Main():void
