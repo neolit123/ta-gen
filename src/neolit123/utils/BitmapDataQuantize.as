@@ -286,10 +286,15 @@ package neolit123.utils
 			noiseLevel.fixed = true;
 
 			// normalize levels
-			const levelsA:uint = bitsToLevels(_channelBits[CH_BIT_A]);
-			const levelsR:uint = bitsToLevels(_channelBits[CH_BIT_R]);
-			const levelsG:uint = bitsToLevels(_channelBits[CH_BIT_G]);
-			const levelsB:uint = bitsToLevels(_channelBits[CH_BIT_B]);
+			const chanBitsA:uint = _channelBits[CH_BIT_A];
+			const chanBitsR:uint = _channelBits[CH_BIT_R];
+			const chanBitsG:uint = _channelBits[CH_BIT_G];
+			const chanBitsB:uint = _channelBits[CH_BIT_B];
+
+			const levelsA:uint = bitsToLevels(chanBitsA);
+			const levelsR:uint = bitsToLevels(chanBitsR);
+			const levelsG:uint = bitsToLevels(chanBitsG);
+			const levelsB:uint = bitsToLevels(chanBitsB);
 
 			const normA:Number = normalizeLevels(levelsA);
 			const normR:Number = normalizeLevels(levelsR);
