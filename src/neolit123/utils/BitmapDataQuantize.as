@@ -353,7 +353,7 @@ package neolit123.utils
 				g = (g & ~(g >> 31)) - 255; g = (g & (g >> 31)) + 255;
 				b = (b & ~(b >> 31)) - 255; b = (b & (b >> 31)) + 255;
 
-				// normalize each channel
+				// quantize each channel
 				na = uint(a * inv255LevelsA + 0.5) * normA;
 				nr = uint(r * inv255LevelsR + 0.5) * normR;
 				ng = uint(g * inv255LevelsG + 0.5) * normG;
