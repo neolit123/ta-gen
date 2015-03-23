@@ -169,7 +169,7 @@ adl <app-xml> -- arguments
   -background <0xAARRGGBB> (def. 0x0)
   -padding <padding-between-images> (def: 1)
   -poweroftwo: end dimensions will be a power of 2 square
-  -colorbits <ARGB> (def. 8888): less than 8 per channel means quantization
+  -channelbits <ARGB> (def. 8888): less than 8 per channel means quantization
   -quantizer <0-2> (def. 1): see -listquantizers
   -listquantizers: dump the quantizer list
   -extrude <pixels> (def. 0): extrude the edges of each image
