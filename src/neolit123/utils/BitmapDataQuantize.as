@@ -113,10 +113,8 @@ package neolit123.utils
 		/* a heavily optimized version of Ralph Hauwert's Floyd Steinberg AS3.0
 		 * implementation:
 		 * https://code.google.com/p/imageditheringas3/
-		 *
 		 * NOTES:
-		 * - we do not apply the FS kernel to the alpha channel!
-		 *
+		 * - the FS kernel is not applied to the alpha channel!
 		 */
 		public static function quantizeFloydSteinberg(_bmd:BitmapData, _channelBits:Vector.<uint>):void
 		{
@@ -174,7 +172,7 @@ package neolit123.utils
 				g = c >> 8 & 0xFF;
 				b = c & 0xFF;
 
-				// normalize each channel
+				// quantize each channel
 				na = uint(a * inv255LevelsA + 0.5) * normA;
 				nr = uint(r * inv255LevelsR + 0.5) * normR;
 				ng = uint(g * inv255LevelsG + 0.5) * normG;
