@@ -158,7 +158,9 @@ Copyright 2011, Pimm Hogeling and Edo Rivai. All rights reserved.
 Copyright 2011-2015, Cameron Desrochers. All rights reserved.
 
 usage:
-adl <app-xml> -- arguments
+adl <app-xml> -- [arguments]
+
+argument list:
   -in <path-to-load> -in <...>
   -out <output-png>
   -ignore <some-path-or-file> -ignore <...> (no wildcards)
