@@ -263,6 +263,8 @@ package neolit123.utils
 		}
 
 		/* a simple but efficient noise shaping dither
+		 * NOTES:
+		 * - the alpha channel is not part of the error and noise feedback
 		 */
 		public static function quantizeNoiseShaping(_bmd:BitmapData, _channelBits:Vector.<uint>):void
 		{
