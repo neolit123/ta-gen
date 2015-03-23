@@ -271,6 +271,20 @@ package neolit123.utils
 			// error checking
 			checkQuantizeInput("quantizeNoiseShaping", _bmd, _channelBits);
 
+			// noise multiplier curve for channel bits [0 - 8]
+			const noiseLevel:Vector.<Number> = new <Number>[
+				0.0, // 0
+				1.0, // 1
+				2.0, // 2
+				2.0, // 3
+				2.0, // 4
+				2.0, // 5
+				2.0, // 6
+				1.0, // 7
+				0.0  // 8
+			];
+			noiseLevel.fixed = true;
+
 			// normalize levels
 			const levelsA:uint = bitsToLevels(_channelBits[CH_BIT_A]);
 			const levelsR:uint = bitsToLevels(_channelBits[CH_BIT_R]);
