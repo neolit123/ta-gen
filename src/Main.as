@@ -561,20 +561,24 @@ argument list:
 			var list:Array = _dir.getDirectoryListing();
 			const len:uint = list.length;
 			for (var i:uint = 0; i < len; i++) {
-				if (checkPathIgnore(list[i])) {
+				const cur:File = list[i];
+				if (checkPathIgnore(cur)) {
 					continue;
 				}
-				if (list[i].isDirectory) {
-					traverse(list[i]);
+				if (cur.isDirectory) {
+					traverse(cur);
 					continue;
 				}
-				const path:String = list[i].nativePath;
+				const path:String = cur.nativePath;
 				const lcPath:String = path.toLowerCase();
-				if (lcPath.indexOf(".jpeg") == lcPath.length - 5 ||
-				    lcPath.indexOf(".jpg") == lcPath.length - 4 ||
-				    lcPath.indexOf(".png") == lcPath.length - 4 ||
-				    lcPath.indexOf(".gif") == lcPath.length - 4)
-					files[files.length] = list[i];
+				const lcPathLen:uint = lcPath.length;
+				const lcPathLen5:uint = lcPathLen - 5;
+				const lcPathLen4:uint = lcPathLen - 4;
+				if (lcPath.indexOf(".jpeg") == lcPathLen5 ||
+				    lcPath.indexOf(".jpg") == lcPathLen4 ||
+				    lcPath.indexOf(".png") == lcPathLen4 ||
+				    lcPath.indexOf(".gif") == lcPathLen4)
+					files[files.length] = cur;
 			}
 		}
 
