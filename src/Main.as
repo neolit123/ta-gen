@@ -918,12 +918,13 @@ argument list:
 			const len:uint = bmp.length;
 			var xml:String = "";
 			xml += "<?xml version='1.0' encoding='utf-8'?>\n";
+			xml += "<!-- generated with " + TITLE + " -->\n";
 			xml += "<TextureAtlas imagePath='" + pngPrefix + _png + "'>\n";
 
 			for (var i:uint = 0; i < len; i++)  {
 				var bName:String = files[i].nativePath.split(folder.nativePath + FILE_SEP).join("");
 				bName = bName.split(FILE_SEP).join("/");
-				const b:Bitmap = bmp[i];				
+				const b:Bitmap = bmp[i];
 				const bX:String = (b.x + extrude).toString();
 				const bY:String = (b.y + extrude).toString();
 				const bW:String = (b.width - ext2).toString();
