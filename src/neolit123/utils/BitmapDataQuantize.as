@@ -334,7 +334,7 @@ package neolit123.utils
 				/*
 				 * (1) a simple xor shift prng
 				 * (2) move prng value to the [0.0, 1.0] range
-				 * (3) apply the qaunt. error from feedback with weighted noise
+				 * (3) apply the quant. error from feedback with weighted noise
 				 */
 				rs ^= rs << 7; rs ^= rs >> 5; rs ^= rs << 3; // (1)
 				rn = rs * invRandMax;                        // (2)
