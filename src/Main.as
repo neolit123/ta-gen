@@ -63,10 +63,6 @@ package
 
 	public class Main extends Sprite
 	{
-		// argument list
-		private var args:Array;
-		private var currentDir:File;
-
 		// params and default values
 		private var padding:uint = 1;
 		private var maxDim:uint = 2048;
@@ -201,13 +197,14 @@ argument list:
 		// called each time the app starts
 		public function invokeEventHandler(_e:InvokeEvent):void
 		{
+			const args:Array = _e.arguments;
+			const currentDir:File = _e.currentDirectory;
+			const argLen:int = args.length;
 			var i:uint, j:uint;
-			args = _e.arguments;
-			currentDir = _e.currentDirectory;
 
 			// parse command line
 
-			if (args.length) {
+			if (argLen) {
 				if (args.indexOf("-verbose") != -1)
 					verbose = true;
 
@@ -232,9 +229,7 @@ argument list:
 					return;
 				}
 
-				const len:int = args.length;
-
-				for (i = 0; i < len; i++) {
+				for (i = 0; i < argLen; i++) {
 
 					const carg:String = args[i];
 
@@ -255,7 +250,7 @@ argument list:
 
 					var iPrev:int = i; // store current index
 
-					if (i < len - 1) { // bellow are two-part arguments
+					if (i < argLen - 1) { // bellow are two-part arguments
 
 						const narg:String = args[i + 1];
 
