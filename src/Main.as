@@ -615,10 +615,10 @@ argument list:
 		{
 			log("* sorting...");
 			startTime = getTimer();
-			var i:int;
+			var i:uint;
 
 			dimW = dimH = minDim;
-			const total:int = bmp.length;
+			const total:uint = bmp.length;
 			const increment:uint = 2;
 			dimError = false;
 
