@@ -74,7 +74,7 @@ package
 		private var pngPrefix:String = "";
 		private var subPrefix:String = "";
 		private var usePowerOfTwo:Boolean = false;
-		private var channelBits:Vector.<uint> = Vector.<uint>([8, 8, 8, 8]);
+		private var channelBits:Vector.<uint> = new <uint>[8, 8, 8, 8];
 		private var verbose:Boolean = false;
 		private var dimW:uint, dimH:uint;
 		private var dimError:Boolean = false;
@@ -87,9 +87,9 @@ package
 		// files and lists
 		private var outFile:File = null;
 		private var folder:File = null;
-		private var folders:Vector.<File> = new Vector.<File>();
-		private var ignore:Vector.<File> = new Vector.<File>();
-		private var files:Vector.<String> = new Vector.<String>();
+		private var folders:Vector.<File> = new <File>[];
+		private var ignore:Vector.<File> = new <File>[];
+		private var files:Vector.<File> = new <File>[];
 
 		// UI
 		private var cont:Sprite;
@@ -100,7 +100,7 @@ package
 		// loader
 		private var loader:Loader = new Loader();
 		private var urlRequest:URLRequest = new URLRequest();
-		private var bmp:Vector.<Bitmap> = new Vector.<Bitmap>();
+		private var bmp:Vector.<Bitmap> = new <Bitmap>[];
 		private var loaded:uint = 0;
 
 		/// timers
@@ -118,25 +118,25 @@ package
 		private static const ENC_PNGENCODER2_NORMAL:uint = 4;
 		private static const ENC_PNGENCODER2_GOOD:uint = 5;
 
-		private static const ENC_LIST:Vector.<String> = Vector.<String>([
+		private static const ENC_LIST:Vector.<String> = new <String>[
 			"ENC_PNGENCODER_AS",
 			"ENC_BITMAPDATA_ENCODE",
 			"ENC_BITMAPDATA_ENCODE_FAST",
 			"ENC_PNGENCODER2_FAST",
 			"ENC_PNGENCODER2_NORMAL",
 			"ENC_PNGENCODER2_GOOD"
-		]);
+		];
 
 		// encoders
 		private static const QUANT_POSTERIZE_FAST:uint = 0;
 		private static const QUANT_FLOYD_STEINBERG:uint = 1;
 		private static const QUANT_NOISE_SHAPING:uint = 2;
 
-		private static const QUANT_LIST:Vector.<String> = Vector.<String>([
+		private static const QUANT_LIST:Vector.<String> = new <String>[
 			"QUANT_POSTERIZE_FAST",
 			"QUANT_FLOYD_STEINBERG",
 			"QUANT_NOISE_SHAPING"
-		]);
+		];
 
 		// version and title
 		private static const VERSION:String = "1.4";
