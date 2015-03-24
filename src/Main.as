@@ -362,8 +362,9 @@ argument list:
 				if (!hasGUI && !outFile)
 					error("missing output", true);
 
-				if (folders.length) {
-					for (i = 0; i < folders.length; i++)
+				const foldersLength:uint = folders.length;
+				if (foldersLength) {
+					for (i = 0; i < foldersLength; i++)
 						traverse(folders[i]);
 					processFolders();
 					return;
