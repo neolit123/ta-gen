@@ -476,15 +476,33 @@ argument list:
 			processFolders();
 		}
 
+		private const loadFileBA:ByteArray = new ByteArray();
+		private const loadFileFS:FileStream = new FileStream();
+		private var filesLength:uint;
+
+		private function loadFile(_file:File):void
+		{
+			loadFileBA.clear();
+			loadFileFS.open(_file, FileMode.READ);
+			loadFileFS.readBytes(loadFileBA);
+			loadFileFS.close();
+			loader.loadBytes(loadFileBA);
+		}
+
 		// process folder
 		private function processFolders():void
 		{
 			if (files.length) {
-				urlRequest.url = files[0];
+				filesLength = files.length;
+
 				startTime = getTimer();
-				log("* loading " + files.length + " files...");
-				warning("each image will be extruded by " + extrude + " pixels");
-				loader.load(urlRequest);
+				log("* loading " + filesLength + " files...");
+
+				if (extrude)
+					warning("each image will be extruded by " + extrude + " pixels");
+
+				loadFile(files[0]);
+
 			} else {
 				error("nothing to load!");
 				if (!hasGUI)
@@ -541,7 +559,7 @@ argument list:
 				    lcPath.indexOf(".jpg") == lcPath.length - 4 ||
 				    lcPath.indexOf(".png") == lcPath.length - 4 ||
 				    lcPath.indexOf(".gif") == lcPath.length - 4)
-					files.push(path);
+					files[files.length] = list[i];
 			}
 		}
 
@@ -562,15 +580,15 @@ argument list:
 			b.smoothing = true;
 			cont.addChild(b);
 			bmp.push(b);
-			log("* loaded: " + files[loaded].split(folder.nativePath + File.separator).join("") + ": " + b.width + "x" + b.height);
-		    loaded++;
-		    if (loaded < files.length) {
-		    	urlRequest.url = files[loaded];
-		    	loader.load(urlRequest);
-		    } else {
-		    	log("* done loading in " + (getTimer() - startTime) + " ms");
-		    	sortBitmapsInContainer();
-		    }
+			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + File.separator).join("") + ": " + b.width + "x" + b.height);
+
+			loaded++;
+			if (loaded < filesLength) {
+				loadFile(files[loaded]);
+			} else {
+				log("* done loading in " + (getTimer() - startTime) + " ms");
+				sortBitmapsInContainer();
+			}
 		}
 
 		// rectangle sorting
@@ -843,7 +861,7 @@ argument list:
 			xml += "<TextureAtlas imagePath='" + pngPrefix + _png + "'>\n";
 			const len:int = bmp.length;
 			for (var i:int = 0; i < len; i++)  {
-				var bName:String = files[i].split(folder.nativePath + File.separator).join("");
+				var bName:String = files[i].nativePath.split(folder.nativePath + File.separator).join("");
 				bName = bName.split(File.separator).join("/");
 				const b:Bitmap = bmp[i];
 				const ext2:uint = extrude * 2;
