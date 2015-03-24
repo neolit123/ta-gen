@@ -262,7 +262,7 @@ argument list:
 								error("input path not a directory or does not exist", true);
 								return;
 							}
-							folders.push(folder);
+							folders[folders.length] = folder;
 						} else if (carg == "-out") {
 							outFile = currentDir.resolvePath(narg);
 							logArgument(carg, outFile.nativePath);
@@ -294,7 +294,7 @@ argument list:
 						} else if (carg == "-ignore") {
 							const ignorePath:File = currentDir.resolvePath(narg);
 							logArgument(carg, ignorePath.nativePath);
-							ignore.push(ignorePath);
+							ignore[ignore.length] = ignorePath;
 							i++;
 						} else if (carg == "-channelbits") {
 							if (narg.length == 4) {
@@ -579,7 +579,7 @@ argument list:
 			loader.unload();
 			b.smoothing = true;
 			cont.addChild(b);
-			bmp.push(b);
+			bmp[bmp.length] = b;
 			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + File.separator).join("") + ": " + b.width + "x" + b.height);
 
 			loaded++;
