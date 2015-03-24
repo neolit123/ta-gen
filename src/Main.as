@@ -773,12 +773,12 @@ argument list:
 
 			// quantize
 			if (channelBits[0] + channelBits[1] + channelBits[2] + channelBits[3] < 32) {
-				bmd = new BitmapData(dimW, dimW, true, 0x0);
+				bmd = new BitmapData(dimW, dimH, true, 0x0);
 				bmd.draw(cont);
 
 				quantize(bmd);
 
-				const back:BitmapData = new BitmapData(dimW, dimW, isTransparent, background);
+				const back:BitmapData = new BitmapData(dimW, dimH, isTransparent, background);
 				back.copyPixels(bmd, back.rect, new Point(0, 0), null, null, true);
 				bmd.dispose();
 				bmd = back;
