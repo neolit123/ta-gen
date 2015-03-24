@@ -52,7 +52,7 @@ this will get your started:
 ta-gen -help
 ```
 
-list of arguments (could be out of date):
+list of arguments:
 ```
   -in <path-to-load> -in <...>
   -out <output-png>
