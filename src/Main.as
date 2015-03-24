@@ -579,24 +579,46 @@ argument list:
 			var list:Array = _dir.getDirectoryListing();
 			const len:uint = list.length;
 			for (var i:uint = 0; i < len; i++) {
+
 				const cur:File = list[i];
-				if (checkPathIgnore(cur)) {
+
+				if (checkPathIgnore(cur))
 					continue;
-				}
+
 				if (cur.isDirectory) {
 					traverse(cur);
 					continue;
 				}
+
 				const path:String = cur.nativePath;
 				const lcPath:String = path.toLowerCase();
 				const lcPathLen:uint = lcPath.length;
-				const lcPathLen5:uint = lcPathLen - 5;
+
+				// handle 3 char extensions
 				const lcPathLen4:uint = lcPathLen - 4;
-				if (lcPath.indexOf(".jpeg") == lcPathLen5 ||
-				    lcPath.indexOf(".jpg") == lcPathLen4 ||
-				    lcPath.indexOf(".png") == lcPathLen4 ||
-				    lcPath.indexOf(".gif") == lcPathLen4)
+				if (lcPathLen4 < 0)
+					continue;
+
+				const sub4:String = lcPath.substring(lcPathLen4, lcPathLen);
+				switch (sub4) {
+				case ".jpg":
+				case ".png":
+				case ".gif":
 					files[files.length] = cur;
+					continue;
+				}
+
+				// handle 4 char extensions
+				const lcPathLen5:uint = lcPathLen - 5;
+				if (lcPathLen5 < 0)
+					continue;
+
+				const sub5:String = lcPath.substring(lcPathLen5, lcPathLen);
+				switch (sub5) {
+				case ".jpeg":
+					files[files.length] = cur;
+					continue;
+				}
 			}
 		}
 
