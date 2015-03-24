@@ -8,7 +8,6 @@ https://github.com/Gamua/Starling-Framework
 - RectanglePacker by Ville Koskela
 - PNGEncoder and Flash/AIR by Adobe
 - PNGEncoder2 by Cameron Desrochers
-- dither based on code by Ralph Hauwert
 
 ### Description
 
