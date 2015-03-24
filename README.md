@@ -1,4 +1,4 @@
-# ta-gen v1.4
+# ta-gen v1.5
 A command line Texture Atlas generator for the Starling framework:
 https://github.com/Gamua/Starling-Framework
 
@@ -54,25 +54,25 @@ ta-gen -help
 
 list of arguments (could be out of date):
 ```
--in <path-to-load> -in <...>
--out <output-png>
--ignore <some-path-or-file> -ignore <...> (no wildcards)
--pngprefix <png-name-prefix>
--subprefix <texture-name-prefix>
--mindim <minimum-pixels> (def: 32)
--maxdim <maximum-pixels> (def: 2048)
--background <0xAARRGGBB> (def. 0x0)
--padding <padding-between-images> (def: 1)
--poweroftwo: end dimensions will be a power of 2 square
--colorbits <1-8> (def. 8): less than 8 means quantization
--dither: apply dithering for colorbits less than 8
--extrude <pixels> (def. 0): extrude the edges of each image
--gui: enable a simple user interface
--pngencoder <0-5> (def: 0): see -listpngencoders
--listpngencoders: dump the png encoder list
--verbose: detailed output
--help: this screen
-
+  -in <path-to-load> -in <...>
+  -out <output-png>
+  -ignore <some-path-or-file> -ignore <...> (no wildcards)
+  -pngprefix <png-name-prefix>
+  -subprefix <texture-name-prefix>
+  -mindim <minimum-pixels> (def: 32)
+  -maxdim <maximum-pixels> (def: 2048)
+  -background <0xAARRGGBB> (def. 0x0)
+  -padding <padding-between-images> (def: 1)
+  -poweroftwo: end dimensions will be a power of 2 square
+  -channelbits <ARGB> (def. 8888): less than 8 per channel means quantization
+  -quantizer <0-2> (def. 1): see -listquantizers
+  -listquantizers: dump the quantizer list
+  -extrude <pixels> (def. 0): extrude the edges of each image
+  -gui: enable a simple user interface
+  -pngencoder <0-5> (def: 0): see -listpngencoders
+  -listpngencoders: dump the PNG encoder list
+  -verbose: detailed output
+  -help: this screen
 ```
 
 if you specify -gui and don't specify -in and -out the app becomes semi-GUI
