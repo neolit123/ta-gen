@@ -234,16 +234,17 @@ argument list:
 					const carg:String = args[i];
 
 					// one part arguments
-					if (carg == "-poweroftwo") {
+					switch (carg) {
+					case "-poweroftwo":
 						usePowerOfTwo = true;
 						logArgument(carg);
 						continue;
-					} else if (carg == "-gui") {
+					case "-gui":
 						hasGUI = true;
 						createGUI();
 						logArgument(carg);
 						continue;
-					} else if (carg == "-verbose") {
+					case "-verbose":
 						logArgument(carg);
 						continue; // already handled
 					}
@@ -254,49 +255,59 @@ argument list:
 
 						const narg:String = args[i + 1];
 
-						if (carg == "-in") {
+						switch (carg) {
+						case "-in":
 							folder = currentDir.resolvePath(narg);
-							i++;
 							logArgument(carg, folder.nativePath);
 							if (!folder.exists || !folder.isDirectory) {
 								error("input path not a directory or does not exist", true);
 								return;
 							}
 							folders[folders.length] = folder;
-						} else if (carg == "-out") {
+							i++;
+							break;
+						case "-out":
 							outFile = currentDir.resolvePath(narg);
 							logArgument(carg, outFile.nativePath);
 							i++;
-						} else if (carg == "-pngprefix") {
+							break;
+						case "-pngprefix":
 							pngPrefix = narg;
 							logArgument(carg, pngPrefix);
 							i++;
-						} else if (carg == "-subprefix") {
+							break;
+						case "-subprefix":
 							subPrefix = narg;
 							logArgument(carg, subPrefix);
 							i++;
-						} else if (carg == "-mindim") {
+							break;
+						case "-mindim":
 							minDim = uint(narg);
 							logArgument(carg, minDim);
 							i++;
-						} else if (carg == "-maxdim") {
+							break;
+						case "-maxdim":
 							maxDim = uint(narg);
 							logArgument(carg, maxDim);
 							i++;
-						} else if (carg == "-background") {
+							break;
+						case "-background":
 							background = uint(narg);
 							logArgument(carg, background.toString(16).toUpperCase());
 							i++;
-						} else if (carg == "-padding") {
+							break;
+						case "-padding":
 							padding = uint(narg);
 							logArgument(carg, padding);
 							i++;
-						} else if (carg == "-ignore") {
+							break;
+						case "-ignore":
 							const ignorePath:File = currentDir.resolvePath(narg);
 							logArgument(carg, ignorePath.nativePath);
 							ignore[ignore.length] = ignorePath;
 							i++;
-						} else if (carg == "-channelbits") {
+							break;
+						case "-channelbits":
 							if (narg.length == 4) {
 								for (j = 0; j < 4; j++) {
 									var channelBitTemp:uint = uint(narg.charAt(j));
@@ -311,11 +322,13 @@ argument list:
 							}
 							logArgument(carg, channelBits.join(""));
 							i++;
-						} else if (carg == "-extrude") {
+							break;
+						case "-extrude":
 							extrude = uint(narg);
 							logArgument(carg, extrude);
 							i++;
-						} else if (carg == "-pngencoder") {
+							break;
+						case "-pngencoder":
 							pngEncoder = uint(narg);
 							if (pngEncoder > ENC_LIST.length - 1) {
 								warning("bad PNG encoder. setting the default one.");
@@ -323,7 +336,8 @@ argument list:
 							}
 							logArgument(carg, ENC_LIST[pngEncoder]);
 							i++;
-						} else if (carg == "-quantizer") {
+							break;
+						case "-quantizer":
 							quantizer = uint(narg);
 							if (quantizer > QUANT_LIST.length - 1) {
 								warning("bad quantizer. setting the default one.");
@@ -331,6 +345,7 @@ argument list:
 							}
 							logArgument(carg, QUANT_LIST[quantizer]);
 							i++;
+							break;
 						}
 					}
 
