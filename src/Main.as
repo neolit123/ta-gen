@@ -63,6 +63,8 @@ package
 
 	public class Main extends Sprite
 	{
+		private const FILE_SEP:String = File.separator;
+
 		// params and default values
 		private var padding:uint = 1;
 		private var maxDim:uint = 2048;
@@ -599,7 +601,7 @@ argument list:
 			b.smoothing = true;
 			cont.addChild(b);
 			bmp[bmp.length] = b;
-			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + File.separator).join("") + ": " + b.width + "x" + b.height);
+			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + FILE_SEP).join("") + ": " + b.width + "x" + b.height);
 
 			loaded++;
 			if (loaded < filesLength) {
@@ -777,7 +779,7 @@ argument list:
 
 			// save XML
 			var pngFile:String = _outFile.nativePath;
-			pngFile = pngFile.substring(pngFile.lastIndexOf(File.separator) + 1, pngFile.length);
+			pngFile = pngFile.substring(pngFile.lastIndexOf(FILE_SEP) + 1, pngFile.length);
 			const xml:String = getXMLStarling(pngFile);
 			const xmlPath:String = _outFile.nativePath.split(PNG).join(".xml");
 			_outFile = _outFile.resolvePath(xmlPath);
@@ -880,8 +882,8 @@ argument list:
 			xml += "<TextureAtlas imagePath='" + pngPrefix + _png + "'>\n";
 			const len:uint = bmp.length;
 			for (var i:uint = 0; i < len; i++)  {
-				var bName:String = files[i].nativePath.split(folder.nativePath + File.separator).join("");
-				bName = bName.split(File.separator).join("/");
+				var bName:String = files[i].nativePath.split(folder.nativePath + FILE_SEP).join("");
+				bName = bName.split(FILE_SEP).join("/");
 				const b:Bitmap = bmp[i];
 				const ext2:uint = extrude * 2;
 				const bX:String = (b.x + extrude).toString();
