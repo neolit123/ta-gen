@@ -859,8 +859,8 @@ argument list:
 			var xml:String = "";
 			xml += "<?xml version='1.0' encoding='utf-8'?>\n";
 			xml += "<TextureAtlas imagePath='" + pngPrefix + _png + "'>\n";
-			const len:int = bmp.length;
-			for (var i:int = 0; i < len; i++)  {
+			const len:uint = bmp.length;
+			for (var i:uint = 0; i < len; i++)  {
 				var bName:String = files[i].nativePath.split(folder.nativePath + File.separator).join("");
 				bName = bName.split(File.separator).join("/");
 				const b:Bitmap = bmp[i];
