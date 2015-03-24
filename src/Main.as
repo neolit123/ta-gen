@@ -503,7 +503,23 @@ argument list:
 			loadFileFS.open(_file, FileMode.READ);
 			loadFileFS.readBytes(loadFileBA);
 			loadFileFS.close();
+			if (!loadFileBA.length) {
+				warning("skipping zero sized file: " + _file.nativePath);
+				loadNextFile();
+				return;
+			}
 			loader.loadBytes(loadFileBA);
+		}
+
+		private function loadNextFile():void
+		{
+			loaded++;
+			if (loaded < filesLength) {
+				loadFile(files[loaded]);
+			} else {
+				log("* done loading in " + (getTimer() - startTime) + " ms");
+				sortBitmapsInContainer();
+			}
 		}
 
 		// process folder
@@ -603,13 +619,7 @@ argument list:
 			bmp[bmp.length] = b;
 			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + FILE_SEP).join("") + ": " + b.width + "x" + b.height);
 
-			loaded++;
-			if (loaded < filesLength) {
-				loadFile(files[loaded]);
-			} else {
-				log("* done loading in " + (getTimer() - startTime) + " ms");
-				sortBitmapsInContainer();
-			}
+			loadNextFile();
 		}
 
 		// rectangle sorting
