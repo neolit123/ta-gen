@@ -736,10 +736,11 @@ argument list:
 		// when clicked on the sprite sheet
 		private function clickHandler(_e:MouseEvent):void
 		{
-			if (files.length) {
-				// save
+			if (files.length) { // save
+
 				if (dimError)
 					return;
+
 				var file:File = new File();
 				file.addEventListener(Event.SELECT, saveFilesHandler);
 				file.browseForSave("Save image");
@@ -913,10 +914,11 @@ argument list:
 		// generate the XML string
 		private function getXMLStarling(_png:String):String
 		{
+			const len:uint = bmp.length;
 			var xml:String = "";
 			xml += "<?xml version='1.0' encoding='utf-8'?>\n";
 			xml += "<TextureAtlas imagePath='" + pngPrefix + _png + "'>\n";
-			const len:uint = bmp.length;
+
 			for (var i:uint = 0; i < len; i++)  {
 				var bName:String = files[i].nativePath.split(folder.nativePath + FILE_SEP).join("");
 				bName = bName.split(FILE_SEP).join("/");
