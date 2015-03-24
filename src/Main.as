@@ -504,7 +504,8 @@ argument list:
 			loadFileFS.readBytes(loadFileBA);
 			loadFileFS.close();
 			if (!loadFileBA.length) {
-				warning("skipping zero sized file: " + _file.nativePath);
+				warning("skipping zero sized file: " +
+					_file.nativePath.split(folder.nativePath + FILE_SEP).join(""));
 				loadNextFile();
 				return;
 			}
@@ -619,6 +620,9 @@ argument list:
 					files[files.length] = cur;
 					continue;
 				}
+
+				warning("skipping file with unknown extension: " +
+					cur.nativePath.split(folder.nativePath + FILE_SEP).join(""));
 			}
 		}
 
