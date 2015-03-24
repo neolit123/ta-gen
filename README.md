@@ -32,7 +32,7 @@ the build scripts will also call - writedesc.[cmd/sh], that will generate
 a descriptor based on the "Version X.X.X.X" variable from the 'adl' output.
 the descriptor is written in ./bin/ta-gen.xml.
 
-edit ./bin/ta-gen.xml if needed.
+edit ./bin/ta-gen.xml or the generator scripts if needed.
 
 ### Installation
 
@@ -47,7 +47,7 @@ edit ta-gen.xml if needed
 
 ### Usage
 
-this will get your started:
+this will get you started:
 ```
 ta-gen -help
 ```
