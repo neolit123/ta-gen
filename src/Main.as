@@ -807,7 +807,7 @@ argument list:
 					pngEncoder = ENC_BITMAPDATA_ENCODE_FAST;
 				else
 					pngEncoder = ENC_PNGENCODER_AS;
-				log("* runtime is version " + versionMajor + ". defaulting to encoder " + pngEncoder + "!");
+				warning("runtime is version " + versionMajor + ". defaulting to encoder " + pngEncoder + "!");
 			}
 
 			switch (pngEncoder)	{
