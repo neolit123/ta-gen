@@ -708,7 +708,7 @@ argument list:
 							dimW <<= 1;
 						if (dimH < maxDim)
 							dimH <<= 2;
-						if (dimH > maxDim) // clamp?
+						else if (dimH > maxDim) // clamp?
 							dimH = maxDim;
 					}
 				} else {
@@ -720,7 +720,7 @@ argument list:
 							dimW += increment;
 						if (dimH < maxDim)
 							dimH += increment2;
-						if (dimH > maxDim) // clamp?
+						else if (dimH > maxDim) // clamp?
 							dimH = maxDim;
 					}
 				}
