@@ -659,12 +659,10 @@ argument list:
 		{
 			log("* sorting...");
 			startTime = getTimer();
-			var i:uint;
 
-			dimW = dimH = minDim;
 			const total:uint = bmp.length;
-			const increment:uint = 4;
-			const increment2:uint = increment << 1;
+			var i:uint;
+			dimW = dimH = minDim;
 			dimError = false;
 
 			if (!packer)
@@ -674,11 +672,6 @@ argument list:
 				// error checking for dimensions
 				if (dimW > maxDim || dimH > maxDim) {
 					dimError = true;
-					error("dimensions exceed the maximum of " + maxDim + " pixels", false);
-					if (outFile) {
-						exit();
-						return;
-					}
 					break;
 				}
 
@@ -695,10 +688,15 @@ argument list:
 				packer.packRectangles(true);
 
 				// all rectangles are packed; break
-				if (packer.rectangleCount == total)
+				if (packer.rectangleCount == total) {
 					break;
+				// if already the maximum dimensions break with an error
+				} else if (dimW == maxDim && dimH == maxDim) {
+					dimError = true
+					break;
+				}
 
-				// increment the size
+				// increment the dimensions
 				if (usePowerOfTwo) {
 					if (useSquare) {
 						dimW <<= 1;
@@ -708,21 +706,31 @@ argument list:
 							dimW <<= 1;
 						if (dimH < maxDim)
 							dimH <<= 2;
-						else if (dimH > maxDim) // clamp?
-							dimH = maxDim;
 					}
 				} else {
 					if (useSquare) {
-						dimW += increment;
+						dimW += 1;
 						dimH = dimW;
 					} else {
 						if (dimW < maxDim)
-							dimW += increment;
+							dimW += 1;
 						if (dimH < maxDim)
-							dimH += increment2;
-						else if (dimH > maxDim) // clamp?
-							dimH = maxDim;
+							dimH += 2;
 					}
+				}
+
+				// clamp to the maximum dimensions
+				if (dimW > maxDim)
+					dimW = maxDim;
+				if (dimH > maxDim)
+					dimH = maxDim;
+			}
+
+			if (dimError) {
+				error("dimensions exceed the maximum of " + maxDim + " pixels", false);
+				if (outFile) {
+					exit();
+					return;
 				}
 			}
 
