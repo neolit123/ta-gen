@@ -81,6 +81,7 @@ package
 		private var hasGUI:Boolean = false;
 		private var pngEncoder:uint = ENC_PNGENCODER_AS;
 		private var quantizer:uint = QUANT_FLOYD_STEINBERG;
+		private var useSquare:Boolean = false;
 
 		// files and lists
 		private var outFile:File = null;
@@ -166,9 +167,10 @@ argument list:
   -subprefix <texture-name-prefix>
   -mindim <minimum-pixels> (def: 32)
   -maxdim <maximum-pixels> (def: 2048)
+  -square: make the ouput image square
   -background <0xAARRGGBB> (def. 0x0)
   -padding <padding-between-images> (def: 1)
-  -poweroftwo: end dimensions will be a power of 2 square
+  -poweroftwo: end dimensions will be power-of-two based
   -channelbits <ARGB> (def. 8888): less than 8 per channel means quantization
   -quantizer <0-2> (def. 1): see -listquantizers
   -listquantizers: dump the quantizer list
@@ -249,6 +251,10 @@ argument list:
 					case "-verbose":
 						logArgument(carg);
 						continue; // already handled
+					case "-square":
+						useSquare = true;
+						logArgument(carg);
+						continue;
 					}
 
 					var iPrev:int = i; // store current index
@@ -657,7 +663,8 @@ argument list:
 
 			dimW = dimH = minDim;
 			const total:uint = bmp.length;
-			const increment:uint = 2;
+			const increment:uint = 4;
+			const increment2:uint = increment << 1;
 			dimError = false;
 
 			if (!packer)
@@ -691,13 +698,29 @@ argument list:
 
 				// increment the size
 				if (usePowerOfTwo) {
-					dimW <<= 1;
-					dimH = dimW;
+					if (useSquare) {
+						dimW <<= 1;
+						dimH = dimW;
+					} else {
+						if (dimW < maxDim)
+							dimW <<= 1;
+						if (dimH < maxDim)
+							dimH <<= 2;
+						if (dimH > maxDim) // clamp?
+							dimH = maxDim;
+					}
 				} else {
-					if (dimH < dimW)
-						dimH += increment;
-					else
+					if (useSquare) {
 						dimW += increment;
+						dimH = dimW;
+					} else {
+						if (dimW < maxDim)
+							dimW += increment;
+						if (dimH < maxDim)
+							dimH += increment2;
+						if (dimH > maxDim) // clamp?
+							dimH = maxDim;
+					}
 				}
 			}
 
