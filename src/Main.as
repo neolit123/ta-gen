@@ -686,8 +686,10 @@ argument list:
 				packer.reset(dimW, dimH, padding);
 
 				// insert rectangles
-				for (i = 0; i < total; i++)
-					packer.insertRectangle(bmp[i].width, bmp[i].height, i);
+				for (i = 0; i < total; i++) {
+					const b:Bitmap = bmp[i];
+					packer.insertRectangle(b.width, b.height, i);
+				}
 
 				// pack
 				packer.packRectangles(true);
