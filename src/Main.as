@@ -106,7 +106,7 @@ package
 		private var initialTime:uint;
 
 		// packer
-		private var packer:RectanglePacker;
+		private var packer:RectanglePacker = null;
 
 		// encoders
 		private static const ENC_PNGENCODER_AS:uint = 0;
@@ -660,6 +660,9 @@ argument list:
 			const increment:uint = 2;
 			dimError = false;
 
+			if (!packer)
+				packer = new RectanglePacker(dimW, dimH, padding);
+
 			while (true) {
 				// error checking for dimensions
 				if (dimW > maxDim || dimH > maxDim) {
@@ -672,8 +675,8 @@ argument list:
 					break;
 				}
 
-				// FIXME; reset() doesn't work well! possible bug in RectanglePacker
-				packer = new RectanglePacker(dimW, dimH, padding);
+				// reset the packer
+				packer.reset(dimW, dimH, padding);
 
 				// insert rectangles
 				for (i = 0; i < total; i++)
@@ -696,9 +699,6 @@ argument list:
 					else
 						dimW += increment;
 				}
-
-				// FIXME; reset() doesn't work well! possible bug in RectanglePacker
-				// packer.reset(dimW, dimH, padding);
 			}
 
 			var rect:Rectangle = new Rectangle();
