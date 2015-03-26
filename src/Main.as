@@ -668,7 +668,12 @@ argument list:
 			b.name = String(loaded); // store the ID as 'name'
 			cont.addChild(b);
 			bmp[bmp.length] = b;
-			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + FILE_SEP).join("") + ": " + b.width + "x" + b.height);
+			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + FILE_SEP).join("") + ": " + b.width + "x" + b.height + "px");
+
+			if (b.width > maxDim || b.height > maxDim) {
+				error("image is larger than the maximum dimensions for an atlas: " + maxDim + "px", true);
+				return;
+			}
 
 			loadNextFile();
 		}
