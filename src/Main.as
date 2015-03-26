@@ -751,25 +751,72 @@ argument list:
 					dimH = maxDim;
 			}
 
-			if (dimError) {
-				error("dimensions exceed the maximum of " + maxDim + " pixels", false);
-				if (outFile) {
-					exit();
-					return;
-				}
-			}
-
-			var rect:Rectangle = new Rectangle();
+			// adjust x, y of the packed bitmaps and show them
+			const rect:Rectangle = new Rectangle();
+			total = packer.rectangleCount;
 			for (i = 0; i < total; i++) {
 				packer.getRectangle(i, rect);
 				const id:uint = packer.getRectangleId(i);
+				bmp[id].visible = true;
 				bmp[id].x = rect.x;
 				bmp[id].y = rect.y;
 			}
 
-			if (!dimError) {
+			log("* final dimensions: " + dimW + "x" + dimH);
+			log("* done sorting in " + (getTimer() - startTime) + " ms");
+
+			const noExt:String = outFile.nativePath.substring(0, outFile.nativePath.lastIndexOf("."));
+			const partFile:File = currentDir.resolvePath(noExt + "_part" + currentPart + PNG_EXT);
+
+			if (dimError) {
+				const message:String = "dimensions exceed the maximum of " + maxDim + "px";
+				if (useMultipart) {
+					warning(message + ". multipart...");
+				} else {
+					error(message + ". enable -multipart", true);
+					return;
+				}
+
+				/* move all bitmaps that remain hidden to 'bmpRemaining'
+				 * while shortening the list of bitmaps to be rendered - 'bmp'.
+				 */
+				bmpRemaining.length = 0;
+				total = bmp.length;
+				i = 0;
+				do {
+					if (!bmp[i].visible) {
+						bmpRemaining[bmpRemaining.length] = bmp[i];
+						bmp.splice(i, 1);
+						total--;
+						continue;
+					}
+					i++;
+				} while (i < total);
+
+				// save files while processing 'bmp'
+				saveFiles(partFile);
+
+				// move bitmaps from 'bmpRemaining' to 'bmp' while hiding them
+				bmp.length = 0;
+				total = bmpRemaining.length;
+				for (i = 0; i < total; i++) {
+					bmp[i] = bmpRemaining[i];
+					bmp[i].visible = false;
+				}
+
+				// increment the current part and recurse
+				currentPart++;
+				sortBitmapsInContainer();
+
+			} else {
 				log("* final dimensions: " + dimW + "x" + dimH);
 				log("* done sorting in " + (getTimer() - startTime) + " ms");
+
+				saveFiles((currentPart > 0) ? partFile : outFile);
+
+				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
+				exit();
+				return;
 			}
 
 			// scale the container and border visually
@@ -886,11 +933,6 @@ argument list:
 
 			log("* file saved (" + pos + " bytes): " + _outFile.nativePath);
 			log("* done saving in " + (getTimer() - startTime) + " ms");
-
-			if (outFile) {
-				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
-				exit();
-			}
 		}
 
 		private function encodePNG(_bmd:BitmapData):ByteArray
