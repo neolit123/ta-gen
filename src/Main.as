@@ -83,6 +83,7 @@ package
 		private var pngEncoder:uint = ENC_PNGENCODER_AS;
 		private var quantizer:uint = QUANT_FLOYD_STEINBERG;
 		private var useSquare:Boolean = false;
+		private var useMultipart:Boolean = false;
 
 		// files and lists
 		private var outFile:File = null;
@@ -179,6 +180,7 @@ argument list:
   -gui: enable a simple user interface
   -pngencoder <0-5> (def: 0): see -listpngencoders
   -listpngencoders: dump the PNG encoder list
+  -multipart: enable automatic splitting to multiple atlases
   -verbose: detailed output
   -help: this screen
 ]]>;
@@ -254,6 +256,10 @@ argument list:
 						continue; // already handled
 					case "-square":
 						useSquare = true;
+						logArgument(carg);
+						continue;
+					case "-multipart":
+						useMultipart = true;
 						logArgument(carg);
 						continue;
 					}
