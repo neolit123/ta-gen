@@ -102,6 +102,7 @@ package
 		// files operations
 		private var loader:Loader = new Loader();
 		private var loaded:uint = 0;
+		private var currentPart:uint = 0;
 		private var stream:FileStream = new FileStream();
 
 		// bitmap lists
