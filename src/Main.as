@@ -685,7 +685,7 @@ argument list:
 			log("* sorting...");
 			startTime = getTimer();
 
-			const total:uint = bmp.length;
+			var total:uint = bmp.length;
 			var i:uint;
 			dimW = dimH = minDim;
 			dimError = false;
