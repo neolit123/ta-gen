@@ -86,6 +86,7 @@ package
 		private var useMultipart:Boolean = false;
 
 		// files and lists
+		private var currentDir:File = null;
 		private var outFile:File = null;
 		private var folder:File = null;
 		private var folders:Vector.<File> = new <File>[];
@@ -207,8 +208,8 @@ argument list:
 		// called each time the app starts
 		public function invokeEventHandler(_e:InvokeEvent):void
 		{
+			currentDir = _e.currentDirectory;
 			const args:Array = _e.arguments;
-			const currentDir:File = _e.currentDirectory;
 			const argLen:int = args.length;
 			var i:uint, j:uint;
 
