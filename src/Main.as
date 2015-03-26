@@ -100,9 +100,12 @@ package
 
 		// files
 		private var loader:Loader = new Loader();
-		private var urlRequest:URLRequest = new URLRequest();
-		private var bmp:Vector.<Bitmap> = new <Bitmap>[];
 		private var loaded:uint = 0;
+		private var stream:FileStream = new FileStream();
+
+		// bitmap lists
+		private var bmp:Vector.<Bitmap> = new <Bitmap>[];
+		private var bmpRemaining:Vector.<Bitmap> = new <Bitmap>[];
 
 		/// timers
 		private var startTime:uint;
