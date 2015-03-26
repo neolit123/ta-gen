@@ -98,7 +98,7 @@ package
 		private var msk:Sprite;
 		private var textLog:TextField;
 
-		// loader
+		// files
 		private var loader:Loader = new Loader();
 		private var urlRequest:URLRequest = new URLRequest();
 		private var bmp:Vector.<Bitmap> = new <Bitmap>[];
