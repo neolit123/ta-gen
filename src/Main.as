@@ -287,6 +287,12 @@ argument list:
 							break;
 						case "-out":
 							outFile = currentDir.resolvePath(narg);
+							const pathLowerCase:String = outFile.nativePath.toLowerCase();
+							if (pathLowerCase.indexOf(PNG_EXT) == -1) {
+								warning("appending " + PNG_EXT + " to the output file");
+								outFile = outFile.resolvePath(outFile.nativePath + PNG_EXT);
+							}
+
 							logArgument(carg, outFile.nativePath);
 							i++;
 							break;
