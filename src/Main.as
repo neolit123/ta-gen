@@ -717,7 +717,7 @@ argument list:
 					break;
 				// if already the maximum dimensions break with an error
 				} else if (dimW == maxDim && dimH == maxDim) {
-					dimError = true
+					dimError = true;
 					break;
 				}
 
