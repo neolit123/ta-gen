@@ -664,6 +664,8 @@ argument list:
 			const b:Bitmap = new Bitmap(source);
 			loader.unload();
 			b.smoothing = true;
+			b.visible = false;
+			b.name = String(loaded); // store the ID as 'name'
 			cont.addChild(b);
 			bmp[bmp.length] = b;
 			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + FILE_SEP).join("") + ": " + b.width + "x" + b.height);
