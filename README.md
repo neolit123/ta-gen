@@ -21,6 +21,13 @@ only and is quite portable.
 - a recent AIR SDK
 - 'mxmlc' and 'adl' in PATH
 
+if you don't have the '/AIR_SDK/bin/' folder in PATH you can use the environment
+variable AIR_SDK_BIN to set it. make sure that the path ends with '\' on
+Windows or with '/' on OSX.
+
+on OSX you might have to also 'chmod +x ...' the .sh scripts in ta-gen root
+and also 'mxmlc' and 'adl' in the '/AIR_SDK/bin/' path.
+
 for some reason the much faster PNGEncoder2 only works with AIR SDK v17.
 for older AIR runtimes the PNGEncoder from Adobe will be used automatically.
 
