@@ -64,7 +64,8 @@ package
 	public class Main extends Sprite
 	{
 		private const FILE_SEP:String = File.separator;
-		private const PNG_EXT:String = ".png";
+		private const EXT_PNG:String = ".png";
+		private const EXT_XML:String = ".xml";
 
 		// params and default values
 		private var padding:uint = 1;
@@ -289,9 +290,9 @@ argument list:
 						case "-out":
 							outFile = currentDir.resolvePath(narg);
 							const pathLowerCase:String = outFile.nativePath.toLowerCase();
-							if (pathLowerCase.indexOf(PNG_EXT) == -1) {
-								warning("appending " + PNG_EXT + " to the output file");
-								outFile = outFile.resolvePath(outFile.nativePath + PNG_EXT);
+							if (pathLowerCase.indexOf(EXT_PNG) == -1) {
+								warning("appending " + EXT_PNG + " to the output file");
+								outFile = outFile.resolvePath(outFile.nativePath + EXT_PNG);
 							}
 
 							logArgument(carg, outFile.nativePath);
@@ -766,7 +767,7 @@ argument list:
 			log("* done sorting in " + (getTimer() - startTime) + " ms");
 
 			const noExt:String = outFile.nativePath.substring(0, outFile.nativePath.lastIndexOf("."));
-			const partFile:File = currentDir.resolvePath(noExt + "_part" + currentPart + PNG_EXT);
+			const partFile:File = currentDir.resolvePath(noExt + "_part" + currentPart + EXT_PNG);
 
 			if (dimError) {
 				const message:String = "dimensions exceed the maximum of " + maxDim + "px";
@@ -903,15 +904,9 @@ argument list:
 			const ba:ByteArray = encodePNG(bmd);
 			bmd.dispose();
 
-			var stream:FileStream = new FileStream();
 			var pos:uint;
 
 			// save PNG
-			const PNG:String = ".png";
-			const pathLowerCase:String = _outFile.nativePath.toLowerCase();
-			if (pathLowerCase.indexOf(PNG) == -1)
-				_outFile = _outFile.resolvePath(_outFile.nativePath + PNG);
-
 			stream.open(_outFile, FileMode.WRITE);
 			stream.writeBytes(ba);
 			pos = stream.position;
@@ -923,7 +918,7 @@ argument list:
 			var pngFile:String = _outFile.nativePath;
 			pngFile = pngFile.substring(pngFile.lastIndexOf(FILE_SEP) + 1, pngFile.length);
 			const xml:String = getXMLStarling(pngFile);
-			const xmlPath:String = _outFile.nativePath.split(PNG).join(".xml");
+			const xmlPath:String = _outFile.nativePath.split(EXT_PNG).join(EXT_XML);
 			_outFile = _outFile.resolvePath(xmlPath);
 
 			stream.open(_outFile, FileMode.WRITE);
