@@ -1,0 +1,23 @@
+git:
+    depth: 10
+
+language: objective-c
+
+env:
+    - TERM=dumb
+
+before_script:
+    - brew update > brew-update.log
+    - brew tap homebrew/binary
+    - brew install adobe-air-sdk > brew-install.log
+    - export AIR_SDK_BIN=/usr/local/opt/adobe-air-sdk/bin/
+    - chmod +x /usr/local/opt/adobe-air-sdk/bin/mxmlc
+    - chmod +x /usr/local/opt/adobe-air-sdk/bin/adl
+    - chmod +x ./build.sh
+    - chmod +x ./writedesc.sh
+
+script:
+    - ./build.sh
+
+notifications:
+    email: false
