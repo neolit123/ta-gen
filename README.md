@@ -87,3 +87,4 @@ and it will ask you where to find the source files and where to write the
 output PNG / XML pair.  
 
 for a usage example see ./test
+ 
