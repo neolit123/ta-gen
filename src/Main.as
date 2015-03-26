@@ -1017,13 +1017,21 @@ argument list:
 			xml += "<TextureAtlas imagePath='" + pngPrefix + _png + "'>\n";
 
 			for (var i:uint = 0; i < len; i++)  {
-				var bName:String = files[i].nativePath.split(folder.nativePath + FILE_SEP).join("");
-				bName = bName.split(FILE_SEP).join("/");
+
 				const b:Bitmap = bmp[i];
+				const fileID:uint = uint(b.name); // the file ID is stored in the Bitmap name
+				b.visible = false; // hiding the bitmap since we no longer need it
+
+				var bName:String = files[fileID].nativePath.split(folder.nativePath + FILE_SEP).join(""); // remove the native path
+				bName = bName.split(FILE_SEP).join("/"); // translate all remaining path seperators to "/"
+
+				// extract properties
 				const bX:String = (b.x + extrude).toString();
 				const bY:String = (b.y + extrude).toString();
 				const bW:String = (b.width - ext2).toString();
 				const bH:String = (b.height - ext2).toString();
+
+				// form SubTexture
 				xml += "	<SubTexture name='" + subPrefix + bName + "' x='" + bX + "' y='" + bY + "' width='" + bW + "' height='" + bH + "'/>\n"
 			}
 			xml += "</TextureAtlas>\n";
