@@ -131,7 +131,7 @@ package
 			"ENC_PNGENCODER2_GOOD"
 		];
 
-		// encoders
+		// qunatizers
 		private static const QUANT_POSTERIZE_FAST:uint = 0;
 		private static const QUANT_FLOYD_STEINBERG:uint = 1;
 		private static const QUANT_NOISE_SHAPING:uint = 2;
