@@ -64,6 +64,7 @@ package
 	public class Main extends Sprite
 	{
 		private const FILE_SEP:String = File.separator;
+		private const PNG_EXT:String = ".png";
 
 		// params and default values
 		private var padding:uint = 1;
