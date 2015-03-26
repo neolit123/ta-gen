@@ -1,11 +1,11 @@
 #!/bin/sh
 
-VERSION_TAGEN=1.4
-BUILD_COMMAND="mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib"
+VERSION_TAGEN=1.5
+BUILD_COMMAND="$AIR_SDK_BIN""mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib"
 
 TMPFILE=./adl.tmp
 
-adl 2> /dev/null > $TMPFILE
+"$AIR_SDK_BIN"adl 2> /dev/null > $TMPFILE
 VERSION_ADL=`sed '2q;d' $TMPFILE`
 
 VERSION_ADL=`grep Version $TMPFILE | cut -c8-12`
@@ -16,7 +16,7 @@ if [ !$VERSION_ADL ]; then
 	exit;
 else
 	echo found ADL version: $VERSION_ADL
-	CMD_RES=`writedesc.sh $VERSION_ADL $VERSION_TAGEN`
+	CMD_RES=`./writedesc.sh $VERSION_ADL $VERSION_TAGEN`
 	echo $CMD_RES
 fi
 
