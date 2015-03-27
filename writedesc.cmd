@@ -1,10 +1,11 @@
 @echo off
+setlocal EnableDelayedExpansion
 
 set FILE=.\bin\ta-gen.xml
 set VERSION_ADL=%1
 if "%VERSION_ADL%"=="" echo defaulting VERSION_ADL to 17.0 & set VERSION_ADL=17.0
 set VERSION_TAGEN=%2
-if "%VERSION_TAGEN%"=="" echo defaulting VERSION_TAGEN to 1.0 & set VERSION_ADL=1.0
+if "%VERSION_TAGEN%"=="" echo defaulting VERSION_TAGEN to 1.0 & set VERSION_TAGEN=1.0
 
 echo writing descriptor for ADL %VERSION_ADL%, ta-gen %VERSION_TAGEN%...
 
