@@ -1,6 +1,12 @@
 #!/bin/sh
 
-VERSION_TAGEN=1.5
+VERSION_TAGEN=`cat ./VERSION 2> /dev/null`
+if [ ! $VERSION_TAGEN ]; then
+	echo "ERROR: cannot find version file"
+	exit 1;
+fi
+echo "found VERSION file: $VERSION_TAGEN"
+
 BUILD_COMMAND="$AIR_SDK_BIN""mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib $@"
 
 TMPFILE=./adl.tmp
