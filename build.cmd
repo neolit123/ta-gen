@@ -2,7 +2,7 @@
 setlocal EnableDelayedExpansion
 
 set VERSION_TAGEN=1.5
-set BUILD_COMMAND=%AIR_SDK_BIN%mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib
+set BUILD_COMMAND=%AIR_SDK_BIN%mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib %*
 
 :: extract the ADL version from the command line
 set VERSION_ADL=

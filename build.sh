@@ -1,7 +1,7 @@
 #!/bin/sh
 
 VERSION_TAGEN=1.5
-BUILD_COMMAND="$AIR_SDK_BIN""mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib"
+BUILD_COMMAND="$AIR_SDK_BIN""mxmlc +configname=air ./src/Main.as -output ./bin/ta-gen.swf -library-path+=./lib $@"
 
 TMPFILE=./adl.tmp
 
