@@ -434,7 +434,7 @@ argument list:
 			NativeApplication.nativeApplication.openedWindows[0].visible = true;
 
 			// add the main container
-			addChild(cont);
+			// addChild(cont);
 
 			/*
 			// a visual border
