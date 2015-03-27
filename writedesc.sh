@@ -20,7 +20,7 @@ TEXT="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>
 	<versionNumber>$VERSION_TAGEN</versionNumber>
 	<filename>ta-gen</filename>
 	<description/>
-	<name>ta-gen</name>
+	<name>ta-gen v$VERSION_TAGEN</name>
 	<copyright/>
 	<initialWindow>
 		<content>ta-gen.swf</content>

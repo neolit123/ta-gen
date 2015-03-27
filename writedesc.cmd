@@ -16,7 +16,7 @@ echo writing descriptor for ADL %VERSION_ADL%, ta-gen %VERSION_TAGEN%...
 	echo 	^<versionNumber^>%VERSION_TAGEN%^</versionNumber^>
 	echo 	^<filename^>ta-gen^</filename^>
 	echo 	^<description/^>
-	echo 	^<name^>ta-gen^</name^>
+	echo 	^<name^>ta-gen v%VERSION_TAGEN%^</name^>
 	echo 	^<copyright/^>
 	echo 	^<initialWindow^>
 	echo 		^<content^>ta-gen.swf^</content^>
