@@ -289,11 +289,7 @@ argument list:
 							break;
 						case "-out":
 							outFile = currentDir.resolvePath(narg);
-							const pathLowerCase:String = outFile.nativePath.toLowerCase();
-							if (pathLowerCase.indexOf(EXT_PNG) == -1) {
-								warning("appending " + EXT_PNG + " to the output file");
-								outFile = outFile.resolvePath(outFile.nativePath + EXT_PNG);
-							}
+							checkAddPNGExtension();
 
 							logArgument(carg, outFile.nativePath);
 							i++;
@@ -423,8 +419,8 @@ argument list:
 				// show open dialog
 				log("* click above to select a folder");
 				folder = new File();
-				folder.addEventListener(Event.SELECT, browseSelectHandler);
-				folder.browseForDirectory("Select folder");
+				folder.addEventListener(Event.SELECT, browseInputHandler);
+				folder.browseForDirectory("Select input folder");
 			}
 		}
 
@@ -440,21 +436,14 @@ argument list:
 			// add the main container
 			addChild(cont);
 
+			/*
 			// a visual border
 			contBorder = new Shape();
 			contBorder.graphics.lineStyle(0.0, 0x00ff00);
 			contBorder.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 			contBorder.graphics.endFill();
 			addChild(contBorder);
-
-			// a click mask
-			msk = new Sprite();
-			msk.graphics.beginFill(0x00ff00);
-			msk.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			msk.graphics.endFill();
-			msk.alpha = 0.0;
-			addChild(msk);
-			msk.addEventListener(MouseEvent.CLICK, clickHandler);
+			*/
 
 			// a textfield to write the log to
 			textLog = new TextField();
@@ -463,8 +452,8 @@ argument list:
 			textLog.multiline = true;
 			textLog.wordWrap = true;
 			textLog.width = stage.stageWidth;
-			textLog.height = stage.stageHeight / 4;
-			textLog.y = stage.stageHeight - textLog.height;
+			textLog.height = stage.stageHeight;
+			textLog.y = 0; // stage.stageHeight - textLog.height;
 			textLog.defaultTextFormat = new TextFormat("_typewriter");
 			addChild(textLog);
 		}
@@ -512,10 +501,19 @@ argument list:
 			NativeApplication.nativeApplication.exit();
 		}
 
-		private function browseSelectHandler(_e:Event):void
+		private function browseInputHandler(_e:Event):void
 		{
 			traverse(folder);
 			processFolders();
+		}
+
+		private function checkAddPNGExtension():void
+		{
+			const pathLowerCase:String = outFile.nativePath.toLowerCase();
+			if (pathLowerCase.indexOf(EXT_PNG) == -1) {
+				warning("appending " + EXT_PNG + " to the output file");
+				outFile = outFile.resolvePath(outFile.nativePath + EXT_PNG);
+			}
 		}
 
 		private const loadFileBA:ByteArray = new ByteArray();
@@ -544,8 +542,23 @@ argument list:
 				loadFile(files[loaded]);
 			} else {
 				log("* done loading in " + (getTimer() - startTime) + " ms");
-				sortBitmapsInContainer();
+				if (!hasGUI) {
+					sortBitmapsInContainer();
+				} else { // if GUI is enabled the user will be asked where to output the PNG
+					if (!outFile)
+						outFile = new File();
+					outFile.addEventListener(Event.SELECT, browseOutputHandler);
+					outFile.browseForSave("Save output PNG image");
+				}
 			}
+		}
+
+		private function browseOutputHandler(_e:Event):void
+		{
+			outFile.removeEventListener(Event.SELECT, browseOutputHandler);
+			outFile = _e.target as File;
+			checkAddPNGExtension();
+			sortBitmapsInContainer();
 		}
 
 		// process folder
@@ -816,10 +829,13 @@ argument list:
 				saveFiles((currentPart > 0) ? partFile : outFile);
 
 				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
-				exit();
+
+				if (!hasGUI)
+					exit();
 				return;
 			}
 
+			/*
 			// scale the container and border visually
 			if (hasGUI) {
 				const sX:Number = stage.stageWidth / dimW;
@@ -829,37 +845,7 @@ argument list:
 				contBorder.height = dimH * sMin;
 				cont.scaleY = cont.scaleX = sMin;
 			}
-
-			if (outFile) {
-				saveFiles(outFile);
-				return;
-			}
-
-			if (!dimError)
-				log("* click above to save the image");
-		}
-
-		// when clicked on the sprite sheet
-		private function clickHandler(_e:MouseEvent):void
-		{
-			if (files.length) { // save
-
-				if (dimError)
-					return;
-
-				var file:File = new File();
-				file.addEventListener(Event.SELECT, saveFilesHandler);
-				file.browseForSave("Save image");
-			} else {
-				// show open dialog
-				folder.addEventListener(Event.SELECT, browseSelectHandler);
-				folder.browseForDirectory("Select folder");
-			}
-		}
-
-		private function saveFilesHandler(_e:Event):void
-		{
-			saveFiles(_e.target as File);
+			*/
 		}
 
 		// save the PNG, XML pair
