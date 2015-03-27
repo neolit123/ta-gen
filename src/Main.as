@@ -143,8 +143,7 @@ package
 		];
 
 		// version and title
-		private static const VERSION:String = "1.5";
-		private static const TITLE:String = "ta-gen v" + VERSION;
+		private static const TITLE:String = "ta-gen v" + Version.VERSION_STRING;
 		private static const HELP_TEXT:String = TITLE + <![CDATA[
 
 Copyright 2014 and later, Lubomir I. Ivanov. All rights reserved.
