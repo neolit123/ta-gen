@@ -1,5 +1,4 @@
-# ta-gen
-[![Build Status](https://travis-ci.org/neolit123/ta-gen.svg)](https://travis-ci.org/neolit123/ta-gen)
+# ta-gen [![Build Status](https://travis-ci.org/neolit123/ta-gen.svg)](https://travis-ci.org/neolit123/ta-gen)
 
 A command line Texture Atlas generator for the Starling framework:
 https://github.com/Gamua/Starling-Framework
