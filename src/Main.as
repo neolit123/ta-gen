@@ -776,7 +776,7 @@ argument list:
 				bmp[id].y = rect.y;
 			}
 
-			log("* final dimensions: " + dimW + "x" + dimH);
+			log("* final dimensions: " + dimW + "x" + dimH + "px");
 			log("* done sorting in " + (getTimer() - startTime) + " ms");
 
 			const noExt:String = outFile.nativePath.substring(0, outFile.nativePath.lastIndexOf("."));
