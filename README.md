@@ -1,4 +1,4 @@
-# ta-gen v1.5
+# ta-gen
 [![Build Status](https://travis-ci.org/neolit123/ta-gen.svg)](https://travis-ci.org/neolit123/ta-gen)
 
 A command line Texture Atlas generator for the Starling framework:
