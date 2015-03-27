@@ -414,7 +414,6 @@ argument list:
 
 			if (hasGUI) {
 				// show open dialog
-				log("* click above to select a folder");
 				folder = new File();
 				folder.addEventListener(Event.SELECT, browseInputHandler);
 				folder.browseForDirectory("Select input folder");
