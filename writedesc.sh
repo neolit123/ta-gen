@@ -37,3 +37,10 @@ TEXT="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>
 </application>"
 
 echo "$TEXT" > $FILE
+
+echo "writing the Version.as file..."
+
+DEFAULT_AS_VERSION="1.0"
+VERSION_AS_FILE="./src/Version.as"
+cp $VERSION_AS_FILE.in $VERSION_AS_FILE
+sed -i "s/$DEFAULT_AS_VERSION/$VERSION_TAGEN/g" $VERSION_AS_FILE
