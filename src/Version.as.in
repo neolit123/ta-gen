@@ -3,8 +3,7 @@ package
 	public class Version
 	{
 		public static const VERSION_STRING:String = "1.0";
-		private static const _split:Array = VERSION_STRING.split(".");
-		public static const VERSION_MAJOR:uint = uint(_split[0]);
-		public static const VERSION_MINOR:uint = uint(_split[1]);
+		public static const VERSION_MAJOR:uint = uint(VERSION_STRING.substring(0, VERSION_STRING.indexOf(".")));
+		public static const VERSION_MINOR:uint = uint(VERSION_STRING.substring(VERSION_STRING.indexOf(".") + 1, VERSION_STRING.length));
 	}
 }
