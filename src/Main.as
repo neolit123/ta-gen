@@ -823,9 +823,6 @@ argument list:
 				sortBitmapsInContainer();
 
 			} else {
-				log("* final dimensions: " + dimW + "x" + dimH);
-				log("* done sorting in " + (getTimer() - startTime) + " ms");
-
 				saveFiles((currentPart > 0) ? partFile : outFile);
 
 				log("* whole operation performed in " + (getTimer() - initialTime) + " ms");
