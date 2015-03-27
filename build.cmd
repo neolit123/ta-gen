@@ -28,7 +28,7 @@ echo found ADL version: %VERSION_ADL%
 cmd /c writedesc %VERSION_ADL% %VERSION_TAGEN%
 
 echo building...
-cmd /c %BUILD_COMMAND%
+cmd /c %BUILD_COMMAND% > NUL
 
 goto end
 

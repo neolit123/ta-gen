@@ -26,4 +26,4 @@ else
 fi
 
 echo building...
-CMD_RES=`$BUILD_COMMAND`
+CMD_RES=`$BUILD_COMMAND > /dev/null`
