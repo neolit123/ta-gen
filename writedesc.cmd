@@ -33,6 +33,19 @@ echo writing descriptor for ADL %VERSION_ADL%, ta-gen %VERSION_TAGEN%...
 	echo ^</application^>
 ) > %FILE%
 
+echo writing the Version.as file...
+
+set VERSION_AS_FILE=.\src\Version.as
+set DEFAULT_AS_VERSION=1.0
+if exist %VERSION_AS_FILE% del /f /q %VERSION_AS_FILE%
+for /f "delims=" %%a in (%VERSION_AS_FILE%.in) do (
+	set OUT=%%a
+	set OUT=!OUT:%DEFAULT_AS_VERSION%=%VERSION_TAGEN%!
+	echo !OUT!>> %VERSION_AS_FILE%
+)
+
 set VERSION_TAGEN=
 set VERSION_ADL=
+set VERSION_AS_FILE=
+set DEFAULT_AS_VERSION=
 set FILE=
