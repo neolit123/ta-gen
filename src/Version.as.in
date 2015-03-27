@@ -1,0 +1,10 @@
+package
+{
+	public class Version
+	{
+		public static const VERSION_STRING:String = "1.0";
+		private static const _split:Array = VERSION_STRING.split(".");
+		public static const VERSION_MAJOR:uint = uint(_split[0]);
+		public static const VERSION_MINOR:uint = uint(_split[1]);
+	}
+}
