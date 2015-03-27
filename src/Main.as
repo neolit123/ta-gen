@@ -872,7 +872,7 @@ argument list:
 				bmd.dispose();
 				bmd = back;
 			} else {
-				bmd = new BitmapData(dimW, dimW, isTransparent, background);
+				bmd = new BitmapData(dimW, dimH, isTransparent, background);
 				bmd.draw(cont);
 			}
 			cont.scaleX = cont.scaleY = scale;
