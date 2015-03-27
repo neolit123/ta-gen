@@ -825,8 +825,6 @@ argument list:
 			startTime = getTimer();
 
 			// draw object to BitmapData
-			const scale:Number = cont.scaleY;
-			cont.scaleX = cont.scaleY = 1.0;
 			var bmd:BitmapData;
 
 			// if the first byte of the background color is 0xFF the image is opaque
@@ -847,7 +845,6 @@ argument list:
 				bmd = new BitmapData(dimW, dimH, isTransparent, background);
 				bmd.draw(cont);
 			}
-			cont.scaleX = cont.scaleY = scale;
 
 			log("* done rendering in " + (getTimer() - startTime) + " ms");
 
