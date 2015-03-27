@@ -32,7 +32,6 @@ package
 	import flash.net.URLRequest;
 
 	import flash.display.Sprite;
-	import flash.display.Shape;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -96,8 +95,6 @@ package
 
 		// UI
 		private var cont:Sprite;
-		private var contBorder:Shape;
-		private var msk:Sprite;
 		private var textLog:TextField;
 
 		// files operations
@@ -432,18 +429,6 @@ argument list:
 		private function createGUI():void
 		{
 			NativeApplication.nativeApplication.openedWindows[0].visible = true;
-
-			// add the main container
-			// addChild(cont);
-
-			/*
-			// a visual border
-			contBorder = new Shape();
-			contBorder.graphics.lineStyle(0.0, 0x00ff00);
-			contBorder.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			contBorder.graphics.endFill();
-			addChild(contBorder);
-			*/
 
 			// a textfield to write the log to
 			textLog = new TextField();
@@ -831,18 +816,6 @@ argument list:
 					exit();
 				return;
 			}
-
-			/*
-			// scale the container and border visually
-			if (hasGUI) {
-				const sX:Number = stage.stageWidth / dimW;
-				const sY:Number = (stage.stageHeight - textLog.height) / dimH;
-				const sMin:Number = Math.min(sX, sY) * 0.999;
-				contBorder.width = dimW * sMin;
-				contBorder.height = dimH * sMin;
-				cont.scaleY = cont.scaleX = sMin;
-			}
-			*/
 		}
 
 		// save the PNG, XML pair
