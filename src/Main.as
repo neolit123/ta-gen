@@ -102,6 +102,8 @@ package
 		private var loaded:uint = 0;
 		private var currentPart:uint = 0;
 		private var stream:FileStream = new FileStream();
+		private var fileBytes:ByteArray = new ByteArray();
+		private var filesLength:uint;
 
 		// bitmap lists
 		private var bmp:Vector.<Bitmap> = new <Bitmap>[];
@@ -499,23 +501,24 @@ argument list:
 			}
 		}
 
-		private const loadFileBA:ByteArray = new ByteArray();
-		private const loadFileFS:FileStream = new FileStream();
-		private var filesLength:uint;
-
 		private function loadFile(_file:File):void
 		{
-			loadFileBA.clear();
-			loadFileFS.open(_file, FileMode.READ);
-			loadFileFS.readBytes(loadFileBA);
-			loadFileFS.close();
-			if (!loadFileBA.length) {
+			stream.open(_file, FileMode.READ);
+			const sz:uint = stream.bytesAvailable;
+
+			if (!sz) {
 				warning("skipping zero sized file: " +
 					_file.nativePath.split(folder.nativePath + FILE_SEP).join(""));
+				stream.close();
 				loadNextFile();
 				return;
 			}
-			loader.loadBytes(loadFileBA);
+
+			fileBytes.length = sz;
+			stream.readBytes(fileBytes, 0, sz);
+			stream.close();
+
+			loader.loadBytes(fileBytes);
 		}
 
 		private function loadNextFile():void
