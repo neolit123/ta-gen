@@ -114,6 +114,10 @@ package
 		private var startTime:uint;
 		private var initialTime:uint;
 
+		// extrude variables
+		private var extrudeRect:Rectangle = new Rectangle(0, 0, 0, 0);
+		private var extrudePoint:Point = new Point(0, 0);
+
 		// packer
 		private var packer:RectanglePacker = null;
 
@@ -651,9 +655,6 @@ argument list:
 					cur.nativePath.split(folderNativePathSEP).join(""));
 			}
 		}
-
-		private const extrudeRect:Rectangle = new Rectangle(0, 0, 0, 0);
-		private const extrudePoint:Point = new Point(0, 0);
 
 		// called each time the loader loads an image
 		private function loadCompleteHandler(_e:Event):void
