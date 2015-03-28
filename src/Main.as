@@ -58,7 +58,7 @@ package
 	import neolit123.utils.BitmapDataQuantize;
 	import neolit123.utils.BitmapDataExtrude;
 
-	[SWF(width='512', height='512', backgroundColor='#ffffff', frameRate='60')]
+	[SWF(width='512', height='512', backgroundColor='#ffffff', frameRate='1000')]
 
 	public class Main extends Sprite
 	{
