@@ -686,13 +686,14 @@ argument list:
 		// rectangle sorting
 		private function sortBitmapsInContainer():void
 		{
-			log("* sorting...");
 			startTime = getTimer();
 
 			var total:uint = bmp.length;
 			var i:uint;
 			dimW = dimH = minDim;
 			dimError = false;
+
+			log("*\n* sorting " + total + " bitmaps...");
 
 			if (!packer)
 				packer = new RectanglePacker(dimW, dimH, padding);
