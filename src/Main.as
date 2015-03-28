@@ -89,6 +89,7 @@ package
 		private var currentDir:File = null;
 		private var outFile:File = null;
 		private var folder:File = null;
+		private var folderNativePathSEP:String = null;
 		private var folders:Vector.<File> = new <File>[];
 		private var ignore:Vector.<File> = new <File>[];
 		private var files:Vector.<File> = new <File>[];
@@ -277,6 +278,7 @@ argument list:
 						switch (carg) {
 						case "-in":
 							folder = currentDir.resolvePath(narg);
+							folderNativePathSEP = folder.nativePath + FILE_SEP;
 							logArgument(carg, folder.nativePath);
 							if (!folder.exists || !folder.isDirectory) {
 								error("input path not a directory or does not exist", true);
@@ -508,7 +510,7 @@ argument list:
 
 			if (!sz) {
 				warning("skipping zero sized file: " +
-					_file.nativePath.split(folder.nativePath + FILE_SEP).join(""));
+					_file.nativePath.split(folderNativePathSEP).join(""));
 				stream.close();
 				loadNextFile();
 				return;
@@ -646,7 +648,7 @@ argument list:
 				}
 
 				warning("skipping file with unknown extension: " +
-					cur.nativePath.split(folder.nativePath + FILE_SEP).join(""));
+					cur.nativePath.split(folderNativePathSEP).join(""));
 			}
 		}
 
@@ -664,12 +666,13 @@ argument list:
 
 			const b:Bitmap = new Bitmap(source);
 			loader.unload();
+
 			b.smoothing = true;
 			b.visible = false;
 			b.name = String(loaded); // store the ID as 'name'
 			cont.addChild(b);
 			bmp[bmp.length] = b;
-			log("* loaded: " + files[loaded].nativePath.split(folder.nativePath + FILE_SEP).join("") + ": " + b.width + "x" + b.height + "px");
+			log("* loaded: " + files[loaded].nativePath.split(folderNativePathSEP).join("") + ": " + b.width + "x" + b.height + "px");
 
 			if (b.width > maxDim || b.height > maxDim) {
 				error("image is larger than the maximum dimensions for an atlas: " + maxDim + "px", true);
@@ -976,7 +979,7 @@ argument list:
 				const fileID:uint = uint(b.name); // the file ID is stored in the Bitmap name
 				b.visible = false; // hiding the bitmap since we no longer need it
 
-				var bName:String = files[fileID].nativePath.split(folder.nativePath + FILE_SEP).join(""); // remove the native path
+				var bName:String = files[fileID].nativePath.split(folderNativePathSEP).join(""); // remove the native path
 				bName = bName.split(FILE_SEP).join("/"); // translate all remaining path seperators to "/"
 
 				// extract properties
