@@ -11,4 +11,4 @@ CMD_RES=`rm -f $TMPFILE`
 
 ZIP_FILE="ta-gen_v""$VERSION_TAGEN""_air"$VERSION_ADL".zip"
 echo "creating release "$ZIP_FILE"..."
-7za a "./release/"$ZIP_FILE ./bin/* > /dev/null
+7za a "./release/"$ZIP_FILE ./bin/* ./README.md ./VERSION ./LICENSE > /dev/null
