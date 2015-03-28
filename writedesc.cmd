@@ -44,8 +44,6 @@ for /f "delims=" %%a in (%VERSION_AS_FILE%.in) do (
 	echo !OUT!>> %VERSION_AS_FILE%
 )
 
-set VERSION_TAGEN=
-set VERSION_ADL=
 set VERSION_AS_FILE=
 set DEFAULT_AS_VERSION=
 set FILE=

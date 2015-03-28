@@ -1,5 +1,4 @@
 @echo off
-setlocal EnableDelayedExpansion
 
 set VERSION_FILE=.\VERSION
 if not exist %VERSION_FILE% goto error_versio_file
@@ -13,9 +12,12 @@ set VERSION_ADL=
 set TMPFILE=.\adl.tmp
 set /a c=0
 
-%AIR_SDK_BIN%adl 2> NUL > !TMPFILE!
+%AIR_SDK_BIN%adl 2> NUL > %TMPFILE%
+
+setlocal EnableDelayedExpansion
 for /f "tokens=*" %%a in (%TMPFILE%) do (
 	if !c! equ 1 (
+		endlocal
 		set VERSION_ADL=%%a & goto found_adl_version
 	)
 	set /a c=c+1
@@ -43,5 +45,3 @@ goto end
 :end
 del /q %TMPFILE%
 set TMPFILE=
-set VERSION_ADL=
-set VERSION_TAGEN=
