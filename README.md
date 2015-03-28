@@ -44,14 +44,13 @@ edit ./bin/ta-gen.xml or the generator scripts if needed.
 
 ### Installation
 
-copy these files to a folder in PATH:
+after building copy these files to a folder in PATH:
 ```
 ./bin/ta-gen.swf
 ./bin/ta-gen.xml
 ./bin/ta-gen (osx) or ./bin/ta-gen.cmd (win32)
 ```
-
-edit ta-gen.xml if needed
+alternatively you can use one of the pre-built packages located in ./release.
 
 ### Usage
 
@@ -85,6 +84,6 @@ list of arguments:
 
 if you specify -gui and don't specify -in and -out the app becomes semi-GUI
 and it will ask you where to find the source files and where to write the
-output PNG / XML pair.  
+output PNG / XML pair.
 
 for a usage example see ./test
