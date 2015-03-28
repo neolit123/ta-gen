@@ -29,8 +29,6 @@ package
 	import flash.filesystem.FileStream;
 	import flash.filesystem.FileMode;
 
-	import flash.net.URLRequest;
-
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
