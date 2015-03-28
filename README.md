@@ -68,9 +68,10 @@ List of arguments:
   -subprefix <texture-name-prefix>
   -mindim <minimum-pixels> (def: 32)
   -maxdim <maximum-pixels> (def: 2048)
+  -square: make the ouput image square
   -background <0xAARRGGBB> (def. 0x0)
   -padding <padding-between-images> (def: 1)
-  -poweroftwo: end dimensions will be a power of 2 square
+  -poweroftwo: end dimensions will be power-of-two based
   -channelbits <ARGB> (def. 8888): less than 8 per channel means quantization
   -quantizer <0-2> (def. 1): see -listquantizers
   -listquantizers: dump the quantizer list
@@ -78,6 +79,7 @@ List of arguments:
   -gui: enable a simple user interface
   -pngencoder <0-5> (def: 0): see -listpngencoders
   -listpngencoders: dump the PNG encoder list
+  -multipart: enable automatic splitting to multiple atlases
   -verbose: detailed output
   -help: this screen
 ```
