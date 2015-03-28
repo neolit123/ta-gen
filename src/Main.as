@@ -42,7 +42,6 @@ package
 	import flash.geom.Point;
 
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.events.InvokeEvent;
 	import flash.events.ErrorEvent;
 	import flash.events.UncaughtErrorEvent;
