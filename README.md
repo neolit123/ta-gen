@@ -22,44 +22,44 @@ only and is quite portable.
 - a recent AIR SDK
 - 'mxmlc' and 'adl' in PATH
 
-if you don't have the '/AIR_SDK/bin/' folder in PATH you can use the environment
-variable AIR_SDK_BIN to set it. make sure that the path ends with '\' on
+If you don't have the '/AIR_SDK/bin/' folder in PATH you can use the environment
+variable AIR_SDK_BIN to set it. Make sure that the path ends with '\' on
 Windows or with '/' on OSX.
 
-on OSX you might have to also 'chmod +x ...' the .sh scripts in ta-gen root
+On OSX you might have to also 'chmod +x ...' the .sh scripts in ta-gen root
 and also 'mxmlc' and 'adl' in the '/AIR_SDK/bin/' path.
 
-for some reason the much faster PNGEncoder2 only works with AIR SDK v17.
-for older AIR runtimes the PNGEncoder from Adobe will be used automatically.
+For some reason the much faster PNGEncoder2 only works with AIR SDK v17.
+For older AIR runtimes the PNGEncoder from Adobe will be used automatically.
 
 ### Building
 
-run build.sh (osx) or build.cmd (win32). resulted SWF will be written to ./bin.
+Run build.sh (osx) or build.cmd (win32). Resulted SWF will be written to ./bin.
 
-the build scripts will also call - writedesc.[cmd/sh], that will generate
+The build scripts will also call - writedesc.[cmd/sh], that will generate
 a descriptor based on the "Version X.X.X.X" variable from the 'adl' output.
-the descriptor is written in ./bin/ta-gen.xml.
+The descriptor is written in ./bin/ta-gen.xml.
 
-edit ./bin/ta-gen.xml or the generator scripts if needed.
+Edit ./bin/ta-gen.xml or the generator scripts if needed.
 
 ### Installation
 
-after building copy these files to a folder in PATH:
+After building copy these files to a folder in PATH:
 ```
 ./bin/ta-gen.swf
 ./bin/ta-gen.xml
 ./bin/ta-gen (osx) or ./bin/ta-gen.cmd (win32)
 ```
-alternatively you can use one of the pre-built packages located in ./release.
+Alternatively you can use one of the pre-built packages located in ./release.
 
 ### Usage
 
-this will get you started:
+This will get you started:
 ```
 ta-gen -help
 ```
 
-list of arguments:
+List of arguments:
 ```
   -in <path-to-load> -in <...>
   -out <output-png>
@@ -82,8 +82,8 @@ list of arguments:
   -help: this screen
 ```
 
-if you specify -gui and don't specify -in and -out the app becomes semi-GUI
+If you specify -gui and don't specify -in and -out the app becomes semi-GUI
 and it will ask you where to find the source files and where to write the
 output PNG / XML pair.
 
-for a usage example see ./test
+For a usage example see ./test
