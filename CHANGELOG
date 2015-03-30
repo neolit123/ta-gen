@@ -1,4 +1,18 @@
-* v1.5 - 24.3.2015
+* v1.6 - 30.03.2015
+- added automatic splitting of output atlases (via -multipart)
+- bug fix resulting in a performance boost when packing images
+- fix some bugs related to rectangular texture atlas support
+- added Travis CI support in the Github repository (mostly for pull requests)
+- added an error check if a single image is larger than the target atlas
+- mostly disabled the GUI part until an actually useful module is implemented
+- added build scripts to generate things like Version.as and for zip release
+  packages
+- the repository from now on will include pre-built zip packages in ./release
+- various build script fixes
+- make the run scripts search for AIR_SDK_BIN if defined 
+- more performance optimizations
+
+* v1.5 - 24.03.2015
 - quantize: added a fast noise shaping quantization algorithm
 - quantize: optimizations for the FS algorithm
 - command line: better parser
@@ -11,23 +25,23 @@
 - added a fancy line in the output XML saying "generated with ta-gen vX.X"
 - small performance optimizations all over the place
 
-* v1.4 - 18.3.2015
+* v1.4 - 18.03.2015
 - add support for different PNG encoder options from the command line
 - PNGEncoder.as optimizations and RGB (24bit) support
 - added the optional PNGEncoder2 from Cameron Desrochers
 - improved build scripts
 - framerate and logger improvements
 
-* v1.3 - 16.3.2015
+* v1.3 - 16.03.2015
 - the UI is now off by default unless -gui is specified
 - added improved error handling
 - added better file extension checks
 - small performance optimizations
 
-* v1.2 - 12.3.2015
+* v1.2 - 12.03.2015
 - added support for sub-texture edge extrusion
 
-* v1.1 - 07.3.2015
+* v1.1 - 07.03.2015
 - added support for quantization and dithering
 
 * v1.0 - 21.12.2014
