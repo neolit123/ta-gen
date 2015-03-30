@@ -696,12 +696,6 @@ argument list:
 				packer = new RectanglePacker(dimW, dimH, padding);
 
 			while (true) {
-				// error checking for dimensions
-				if (dimW > maxDim || dimH > maxDim) {
-					dimError = true;
-					break;
-				}
-
 				// reset the packer
 				packer.reset(dimW, dimH, padding);
 
