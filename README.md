@@ -10,6 +10,10 @@ https://github.com/Gamua/Starling-Framework
 - PNGEncoder and Flash/AIR by Adobe
 - PNGEncoder2 by Cameron Desrochers
 
+### Website
+
+https://github.com/neolit123/ta-gen
+
 ### Description
 
 ta-gen is a command line Texture Atlas generator for the Starling format.
