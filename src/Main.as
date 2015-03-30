@@ -78,6 +78,7 @@ package
 		private var extrude:uint = 0;
 		private var hasGUI:Boolean = false;
 		private var pngEncoder:uint = ENC_PNGENCODER_AS;
+		private var pngEncoderOptions:PNGEncoderOptions = new PNGEncoderOptions();
 		private var quantizer:uint = QUANT_FLOYD_STEINBERG;
 		private var useSquare:Boolean = false;
 		private var useMultipart:Boolean = false;
@@ -899,13 +900,12 @@ argument list:
 				ba = PNGEncoder.encode(_bmd);
 				break;
 			case ENC_BITMAPDATA_ENCODE:
-				opt = new PNGEncoderOptions();
-				ba = _bmd.encode(_bmd.rect, opt);
+				pngEncoderOptions.fastCompression = false;
+				ba = _bmd.encode(_bmd.rect, pngEncoderOptions);
 				break;
 			case ENC_BITMAPDATA_ENCODE_FAST:
-				opt = new PNGEncoderOptions();
-				opt.fastCompression = true;
-				ba = _bmd.encode(_bmd.rect, opt);
+				pngEncoderOptions.fastCompression = true;
+				ba = _bmd.encode(_bmd.rect, pngEncoderOptions);
 				break;
 			case ENC_PNGENCODER2_FAST:
 				PNGEncoder2.level = CompressionLevel.FAST;
