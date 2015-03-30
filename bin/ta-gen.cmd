@@ -1,2 +1,2 @@
 @echo off
-adl %~dp0\ta-gen.xml -- %*
+%AIR_SDK_BIN%adl %~dp0\ta-gen.xml -- %*
