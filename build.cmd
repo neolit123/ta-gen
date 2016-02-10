@@ -1,7 +1,7 @@
 @echo off
 
 set VERSION_FILE=.\VERSION
-if not exist %VERSION_FILE% goto error_versio_file
+if not exist %VERSION_FILE% goto error_version_file
 set /p VERSION_TAGEN=<%VERSION_FILE%
 echo found VERSION file: %VERSION_TAGEN%
 
