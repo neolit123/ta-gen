@@ -40,7 +40,8 @@ package neolit123.utils
 		                               _extrudePixels:uint,
 		                               _disposeSource:Boolean = false,
 		                               _rect:Rectangle = null,
-		                               _point:Point = null):BitmapData
+		                               _point:Point = null,
+									   scale:Number = 1.0):BitmapData
 		{
 			// error checking
 			if (!_source)
@@ -50,8 +51,8 @@ package neolit123.utils
 			const ext:uint = _extrudePixels;
 			const src:BitmapData = _source;
 
-			const srcW:uint = src.width;
-			const srcH:uint = src.height;
+			const srcW:uint = src.width * scale;
+			const srcH:uint = src.height * scale;
 			const destW:uint = srcW + ext * 2;
 			const destH:uint = srcH + ext * 2;
 
@@ -102,7 +103,7 @@ package neolit123.utils
 				dest.copyPixels(dest, rect, point);
 
 				// bottom
-				rect.x = 0
+				rect.x = 0;
 				rect.y = srcH + ext - 1;
 				rect.width = destW;
 				rect.height = 1;

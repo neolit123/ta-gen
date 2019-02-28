@@ -675,9 +675,10 @@ argument list:
 
 			// perform extrusion if 'extrude' is more than 0
 			if (extrude)
-				source = BitmapDataExtrude.extrude(source, extrude, true, extrudeRect, extrudePoint);
+				source = BitmapDataExtrude.extrude(source, extrude, true, extrudeRect, extrudePoint, scale);
 
 			const b:Bitmap = new Bitmap(source);
+			b.scaleX = b.scaleY = scale;
 			loader.unload();
 
 			b.smoothing = true;
@@ -844,21 +845,24 @@ argument list:
 			const isTransparent:Boolean = !((background >>> 24) == 0xFF);
 
 			var m:Matrix = new Matrix();
-			m.scale(scale, scale);
+//			m.scale(scale, scale);
 
 			// quantize
 			if (channelBits[0] + channelBits[1] + channelBits[2] + channelBits[3] < 32) {
-				bmd = new BitmapData(dimW * scale, dimH * scale, true, 0x0);
+				bmd = new BitmapData(dimW, dimH, true, 0x0);
+//				bmd = new BitmapData(dimW * scale, dimH * scale, true, 0x0);
 				bmd.draw(cont, m);
 
 				quantize(bmd);
 
-				const back:BitmapData = new BitmapData(dimW * scale, dimH * scale, isTransparent, background);
+				const back:BitmapData = new BitmapData(dimW, dimH, isTransparent, background);
+//				const back:BitmapData = new BitmapData(dimW * scale, dimH * scale, isTransparent, background);
 				back.copyPixels(bmd, back.rect, new Point(0, 0), null, null, true);
 				bmd.dispose();
 				bmd = back;
 			} else {
-				bmd = new BitmapData(dimW * scale, dimH * scale, isTransparent, background);
+				bmd = new BitmapData(dimW, dimH, isTransparent, background);
+//				bmd = new BitmapData(dimW * scale, dimH * scale, isTransparent, background);
 				bmd.draw(cont, m);
 			}
 
