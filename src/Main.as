@@ -33,7 +33,8 @@ package
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
-	import flash.display.PNGEncoderOptions
+	import flash.display.PNGEncoderOptions;
+	import flash.geom.Matrix;
 
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -80,6 +81,7 @@ package
 		private var pngEncoder:uint = ENC_PNGENCODER_AS;
 		private var pngEncoderOptions:PNGEncoderOptions = new PNGEncoderOptions();
 		private var quantizer:uint = QUANT_FLOYD_STEINBERG;
+		private var scale:Number = 1;
 		private var useSquare:Boolean = false;
 		private var useMultipart:Boolean = false;
 
@@ -149,7 +151,7 @@ package
 
 		// version and title
 		private static const TITLE:String = "ta-gen v" + Version.VERSION_STRING;
-		private static const HELP_TEXT:String = TITLE + <![CDATA[
+		private static const HELP_TEXT:String = "TITLE";/*TITLE + <![CDATA[
 
 Copyright 2014 and later, Lubomir I. Ivanov. All rights reserved.
 
@@ -189,11 +191,14 @@ argument list:
   -listpngencoders: dump the PNG encoder list
   -multipart: enable automatic splitting to multiple atlases
   -verbose: detailed output
+  -scale <0-1> (def. 1): scale of atlas
   -help: this screen
-]]>;
+]]>;*/
 
 		public function Main():void
 		{
+			new PNGEncoderOptions();
+
 			initialTime = getTimer();
 
 			loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleErrors);
@@ -369,6 +374,15 @@ argument list:
 								quantizer = QUANT_FLOYD_STEINBERG;
 							}
 							logArgument(carg, QUANT_LIST[quantizer]);
+							i++;
+							break;
+						case "-scale":
+							scale = parseFloat(narg);
+							if (scale < 0) {
+								warning("scale cannot be 0 or lower");
+								scale = 1;
+							}
+							logArgument(carg, scale);
 							i++;
 							break;
 						}
@@ -829,20 +843,23 @@ argument list:
 			// if the first byte of the background color is 0xFF the image is opaque
 			const isTransparent:Boolean = !((background >>> 24) == 0xFF);
 
+			var m:Matrix = new Matrix();
+			m.scale(scale, scale);
+
 			// quantize
 			if (channelBits[0] + channelBits[1] + channelBits[2] + channelBits[3] < 32) {
-				bmd = new BitmapData(dimW, dimH, true, 0x0);
-				bmd.draw(cont);
+				bmd = new BitmapData(dimW * scale, dimH * scale, true, 0x0);
+				bmd.draw(cont, m);
 
 				quantize(bmd);
 
-				const back:BitmapData = new BitmapData(dimW, dimH, isTransparent, background);
+				const back:BitmapData = new BitmapData(dimW * scale, dimH * scale, isTransparent, background);
 				back.copyPixels(bmd, back.rect, new Point(0, 0), null, null, true);
 				bmd.dispose();
 				bmd = back;
 			} else {
-				bmd = new BitmapData(dimW, dimH, isTransparent, background);
-				bmd.draw(cont);
+				bmd = new BitmapData(dimW * scale, dimH * scale, isTransparent, background);
+				bmd.draw(cont, m);
 			}
 
 			log("* done rendering in " + (getTimer() - startTime) + " ms");
