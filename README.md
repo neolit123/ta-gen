@@ -86,6 +86,7 @@ List of arguments:
   -multipart: enable automatic splitting to multiple atlases
   -verbose: detailed output
   -help: this screen
+  -scale: scale of output atlas
 ```
 
 If you specify -gui and don't specify -in and -out the app becomes semi-GUI
