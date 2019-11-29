@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<application xmlns="http://ns.adobe.com/air/application/30.0">
+	<id>ta-gen</id>
+	<versionNumber>1.7</versionNumber>
+	<filename>ta-gen</filename>
+	<description/>
+	<name>ta-gen v1.7</name>
+	<copyright/>
+	<initialWindow>
+		<content>ta-gen.swf</content>
+		<systemChrome>standard</systemChrome>
+		<transparent>false</transparent>
+		<visible>false</visible>
+		<fullScreen>false</fullScreen>
+		<aspectRatio>portrait</aspectRatio>
+		<renderMode>auto</renderMode>
+	</initialWindow>
+	<icon/>
+	<customUpdateUI>false</customUpdateUI>
+	<allowBrowserInvocation>false</allowBrowserInvocation>
+</application>
